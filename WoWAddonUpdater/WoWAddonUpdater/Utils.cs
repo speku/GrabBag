@@ -14,13 +14,10 @@ namespace WoWAddonUpdater
     class Utils
     {
 
-        private static List<Addon> allAddons = new List<Addon>();
+        public static List<Addon> allAddons = new List<Addon>();
         public static List<string> invalidAddonNames = new List<string>();
 
-        private static Dictionary<Sites, Dictionary<int, string>> siteToPattern = new Dictionary<Sites, Dictionary<int, string>>();
-
-        private static Dictionary<Sites, string> siteToBasePage = new Dictionary<Sites, string>();
-
+        public static Dictionary<Sites, Dictionary<int, ParseDetail>> siteToPattern = new Dictionary<Sites, Dictionary<int, ParseDetail>>();
 
         public static event Action<bool, Action<string>> AddonDirectoryFound;
         public static event Action<Exception, string> DownloadCompletedString;
@@ -240,13 +237,22 @@ namespace WoWAddonUpdater
         }
 
 
-        public static void URLToString(string URL, Action<float> callbackProgress, Action<Exception, string> callbackCompleted)
+        public static void URLToStringAsync(string URL, Action<float> callbackProgress, Action<Exception, string> callbackCompleted)
         {
             using (WebClient wc = new WebClient())
             {
                 wc.DownloadStringCompleted += (object o, DownloadStringCompletedEventArgs e) => callbackCompleted(e.Error, e.Result);
                 wc.DownloadProgressChanged += (object o, DownloadProgressChangedEventArgs e) => callbackProgress(e.ProgressPercentage);
                 wc.DownloadStringAsync(new Uri(URL));
+            }
+        }
+
+        public static string URLToString(string URL)
+        {
+
+            using (WebClient wc = new WebClient())
+            {
+                return wc.DownloadString(new Uri(URL));
             }
         }
 
@@ -281,54 +287,98 @@ namespace WoWAddonUpdater
         }
 
 
-        public static void AssociatePatternWithSite(Sites site, int stage, string pattern)
+        public static void AssociatePatternWithSite(Sites site, int stage, int input, string basePage, string pattern)
         {
             if (!siteToPattern.ContainsKey(site))
             {
-                siteToPattern[site] = new Dictionary<int, string>() { { stage, pattern } };
+                siteToPattern[site] = new Dictionary<int, ParseDetail>() { { stage, new ParseDetail(input, basePage, pattern) } };
             } else
             {
-                siteToPattern[site][stage] = pattern;
+                siteToPattern[site][stage] = new ParseDetail(input, basePage, pattern);
             }
         }
 
-        public static void AssociateBasePageWithSite(Sites site, string basePage)
+
+
+        public static string GetDownloadURL(Sites site, string addon, Action<int, int, Exception> callbackProgress, Action<bool, Exception> callbackCompleted)
         {
-            siteToBasePage[site] = basePage;
-        }
+            Dictionary<int, ParseDetail> stageToParseDetail = siteToPattern.ContainsKey(site) ? siteToPattern[site] : Defaults.SITE_TO_PATTERN_DEFAULT[site];
+            Dictionary<int, string> inputs = new Dictionary<int, string>();
 
-
-        public static string BasePage(Sites site)
-        {
-            string val = null;
-            siteToBasePage.TryGetValue(site, out val);
-            return val;
-        }
-
-
-        public static string Pattern(Sites site, int stage)
-        {
-            try
+            for (int i = 1; i <= stageToParseDetail.Count; i++)
             {
-                return siteToPattern[site][stage];
+                var detail = stageToParseDetail[i];
+                if (detail.input >= 0)
+                {
+                    detail.basePage = detail.input == 0 ? String.Format(detail.basePage, addon) : String.Format(detail.basePage, inputs[detail.input]);
+                }
+                try
+                {
+                    string newInput = Regex.Match(URLToString(detail.basePage), detail.pattern).Groups[1].Value;
+                    if (i == stageToParseDetail.Count)
+                    {
+                        callbackCompleted(true, null);
+                        return newInput;
+                    } else
+                    {
+                        inputs[i] = newInput;
+                        callbackProgress(i, stageToParseDetail.Count, null);
+                    }
+                } catch(Exception e)
+                {
+                    callbackProgress(i, stageToParseDetail.Count, e);
+                    return null;
+                }
             }
-            catch
+            return null;
+        }
+
+
+        public static string ParseToc(string dir)
+        {
+            foreach(string file in Directory.GetFiles(dir))
+            {
+                if (file.EndsWith(".toc"))
+                {
+                    try
+                    {
+                        string text = File.ReadAllText(file);
+                        return Regex.Match(text, Actual.tocPattern != null ? Actual.tocPattern : Defaults.TOC_PATTERN_DEFAULT).Groups[1].Value;
+                    }
+                    catch
+                    {
+                        break;
+                    }
+                }
+            }
+            return null;
+        }
+
+
+        public static List<string> GetAddonNames()
+        {
+            string addonDirectory = Directory.Exists(Actual.addonAbsolutePath) ? Actual.addonAbsolutePath : Directory.Exists(Defaults.ADDON_ABSOLUTE_PATH_DEFAULT) ? Defaults.ADDON_ABSOLUTE_PATH_DEFAULT : null;
+
+            if (addonDirectory == null)
             {
                 return null;
             }
 
-        }
+            List<string> addons = new List<string>();
 
-
-        public static Dictionary<int, string> Patterns(Sites site)
-        {
-            try
+            foreach (string dir in Directory.GetDirectories(addonDirectory))
             {
-                return siteToPattern[site];
-            } catch
-            {
-                return null;
+                string preciseName = ParseToc(dir);
+                if (preciseName != null)
+                {
+                    addons.Add(preciseName);
+                } else
+                {
+                    addons.Add(dir);
+                }
             }
+
+            return addons;
         }
 
     }

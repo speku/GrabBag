@@ -12,6 +12,6 @@ namespace WoWAddonUpdater
 
     enum Results { NotFound, Success, DirectoryNotExisting, FileNotExisting, NoWritePermissions, InProgress, ExtractionError, Pending}
 
-    enum States { Downloading, Extracting, Cancelled, DownloadError, ExtractionError, Queued, Downloaded, Extracted, All, Selected, Enabled, ToBeDeleted}
+    enum States { Downloading, Extracting, Cancelled, DownloadError, ExtractionError, Queued, Downloaded, Extracted, All, Selected, Enabled, ToBeDeleted, Parsing, ParsingError}
    
 }

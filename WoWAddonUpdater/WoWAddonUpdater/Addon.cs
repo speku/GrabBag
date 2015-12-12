@@ -12,7 +12,10 @@ namespace WoWAddonUpdater
     {
 
         public event Action<Addon, Exception, bool> DownloadCompleted;
+        public event Action<Addon, Exception, bool> ParsingCompleted;
         public event Action<Addon, float> DownloadProgressChanged;
+        public event Action<Addon, float, Exception> ParsingProgressChanged;
+        public event Action<Addon, float> TotalProgressChanged;
         public event Action<Addon, bool> UnzippingSuccessful;
         public event Action<Addon> Deleted;
 
@@ -31,7 +34,7 @@ namespace WoWAddonUpdater
 
         Types type;
 
-        Sites site;
+        List<Sites> sites;
 
         string downloadLink;
 
@@ -118,16 +121,16 @@ namespace WoWAddonUpdater
             }
         }
 
-        internal Sites Site
+        internal List<Sites> Site
         {
             get
             {
-                return site;
+                return sites;
             }
 
             set
             {
-                site = value;
+                sites = value;
             }
         }
 
@@ -300,13 +303,17 @@ namespace WoWAddonUpdater
             }
         }
 
-      
 
-        Addon(String name, Types type = Types.Unspecified, Sites site = Sites.Unspecified, string downloadLink = DOWNLOAD_DEFAULT, string image = IMAGE_DEFAULT, string description = DESCRIPTION_DEFAULT, string gameVersion = GAME_VERSION_DEFAULT)
+
+        Addon(String name, Types type = Types.Unspecified, List<Sites> sites = null, string downloadLink = DOWNLOAD_DEFAULT, string image = IMAGE_DEFAULT, string description = DESCRIPTION_DEFAULT, string gameVersion = GAME_VERSION_DEFAULT)
         {
+            if (sites == null)
+            {
+                sites = new List<Sites> { Sites.Unspecified };
+            }
             this.Name = name;
             this.Type = type;
-            this.Site = site;
+            this.Site = sites;
             this.DownloadLink = downloadLink;
             this.Image = image;
             this.Description = description;
@@ -314,7 +321,32 @@ namespace WoWAddonUpdater
         }
 
 
-        public Results Download(string path)
+        public void TryDownloadAsync()
+        {
+            Task.Factory.StartNew(TryDownload);
+        }
+
+
+        public void TryDownload()
+        {
+            string url = null;
+            int total = Site.Count;
+            int current = 1;
+            foreach (Sites s in Site)
+            {
+                url = Utils.GetDownloadURL(s, Name, Callback_ParsingProgressChanged, Callback_ParsingCompleted);
+                if (url != null)
+                {
+                    downloadLink = url;
+                    Download();
+                    return;
+                }
+                current++;
+            }
+        }
+
+
+        public Results Download(string path = null)
         {
            if((path == null || path == "") && Directory.Exists(Defaults.DOWNLOAD_ABSOLUTE_PATH_DEFAULT))
             {
@@ -340,21 +372,23 @@ namespace WoWAddonUpdater
 
         private void Callback_DownloadCompleted(Exception error, bool cancelled, string from, string to)
         {
-            if(DownloadCompleted != null)
+            cancelDownload = null;
+            if (error == null && !cancelled)
             {
-                cancelDownload = null;
-                if(error == null && !cancelled)
-                {
-                    State = States.Downloaded;
-                    Utils.Unzip(to, Actual.addonAbsolutePath, Callback_UnzippingSuccessful);
-                }
-                if (cancelled)
-                {
-                    State = States.Cancelled;
-                } else if(error != null)
-                {
-                    State = States.DownloadError;
-                }
+                State = States.Downloaded;
+                Utils.Unzip(to, Actual.addonAbsolutePath, Callback_UnzippingSuccessful);
+            }
+            if (cancelled)
+            {
+                State = States.Cancelled;
+            }
+            else if (error != null)
+            {
+                State = States.DownloadError;
+            }
+            if (DownloadCompleted != null)
+            {
+               
                 DownloadCompleted(this, error, cancelled);
             }
         }
@@ -372,6 +406,25 @@ namespace WoWAddonUpdater
             if(UnzippingSuccessful != null)
             {
                 UnzippingSuccessful(this, success);
+            }
+        }
+
+
+        private void Callback_ParsingProgressChanged(int currentStage, int totalStages, Exception error)
+        {
+            State = States.Parsing;
+            if(DownloadProgressChanged != null)
+            {
+                ParsingProgressChanged(this, (currentStage / totalStages) * 100, error);
+            }
+        }
+
+
+        private void Callback_ParsingCompleted(bool success, Exception error)
+        {
+            if(ParsingCompleted != null)
+            {
+                ParsingCompleted(this, error, success);
             }
         }
 
