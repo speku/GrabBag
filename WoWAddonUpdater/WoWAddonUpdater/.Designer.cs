@@ -31,12 +31,13 @@
             this.AddonList = new System.Windows.Forms.SplitContainer();
             this.LeftListTableLayout = new System.Windows.Forms.TableLayoutPanel();
             this.AddonProgressBar = new System.Windows.Forms.ProgressBar();
+            this.AddonListView = new System.Windows.Forms.ListView();
             this.AddonDetails = new System.Windows.Forms.SplitContainer();
             this.AddonFacts = new System.Windows.Forms.SplitContainer();
+            this.AddonFactsView = new System.Windows.Forms.ListView();
             this.AddonPictureBox = new System.Windows.Forms.PictureBox();
             this.AddonDescriptionText = new System.Windows.Forms.RichTextBox();
-            this.AddonListView = new System.Windows.Forms.ListView();
-            this.AddonFactsView = new System.Windows.Forms.ListView();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             ((System.ComponentModel.ISupportInitialize)(this.AddonList)).BeginInit();
             this.AddonList.Panel1.SuspendLayout();
             this.AddonList.Panel2.SuspendLayout();
@@ -56,7 +57,7 @@
             // AddonList
             // 
             this.AddonList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.AddonList.Location = new System.Drawing.Point(0, 0);
+            this.AddonList.Location = new System.Drawing.Point(0, 24);
             this.AddonList.Name = "AddonList";
             // 
             // AddonList.Panel1
@@ -66,8 +67,8 @@
             // AddonList.Panel2
             // 
             this.AddonList.Panel2.Controls.Add(this.AddonDetails);
-            this.AddonList.Size = new System.Drawing.Size(731, 689);
-            this.AddonList.SplitterDistance = 242;
+            this.AddonList.Size = new System.Drawing.Size(603, 584);
+            this.AddonList.SplitterDistance = 175;
             this.AddonList.TabIndex = 0;
             // 
             // LeftListTableLayout
@@ -84,7 +85,7 @@
             this.LeftListTableLayout.RowCount = 2;
             this.LeftListTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.LeftListTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.LeftListTableLayout.Size = new System.Drawing.Size(242, 689);
+            this.LeftListTableLayout.Size = new System.Drawing.Size(175, 584);
             this.LeftListTableLayout.TabIndex = 0;
             // 
             // AddonProgressBar
@@ -92,8 +93,17 @@
             this.AddonProgressBar.Dock = System.Windows.Forms.DockStyle.Fill;
             this.AddonProgressBar.Location = new System.Drawing.Point(3, 3);
             this.AddonProgressBar.Name = "AddonProgressBar";
-            this.AddonProgressBar.Size = new System.Drawing.Size(236, 14);
+            this.AddonProgressBar.Size = new System.Drawing.Size(169, 14);
             this.AddonProgressBar.TabIndex = 0;
+            // 
+            // AddonListView
+            // 
+            this.AddonListView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.AddonListView.Location = new System.Drawing.Point(3, 23);
+            this.AddonListView.Name = "AddonListView";
+            this.AddonListView.Size = new System.Drawing.Size(169, 1068);
+            this.AddonListView.TabIndex = 1;
+            this.AddonListView.UseCompatibleStateImageBehavior = false;
             // 
             // AddonDetails
             // 
@@ -110,8 +120,8 @@
             // AddonDetails.Panel2
             // 
             this.AddonDetails.Panel2.Controls.Add(this.AddonDescriptionText);
-            this.AddonDetails.Size = new System.Drawing.Size(485, 689);
-            this.AddonDetails.SplitterDistance = 407;
+            this.AddonDetails.Size = new System.Drawing.Size(424, 584);
+            this.AddonDetails.SplitterDistance = 344;
             this.AddonDetails.TabIndex = 0;
             // 
             // AddonFacts
@@ -127,16 +137,25 @@
             // AddonFacts.Panel2
             // 
             this.AddonFacts.Panel2.Controls.Add(this.AddonPictureBox);
-            this.AddonFacts.Size = new System.Drawing.Size(485, 407);
-            this.AddonFacts.SplitterDistance = 264;
+            this.AddonFacts.Size = new System.Drawing.Size(424, 344);
+            this.AddonFacts.SplitterDistance = 230;
             this.AddonFacts.TabIndex = 0;
+            // 
+            // AddonFactsView
+            // 
+            this.AddonFactsView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.AddonFactsView.Location = new System.Drawing.Point(0, 0);
+            this.AddonFactsView.Name = "AddonFactsView";
+            this.AddonFactsView.Size = new System.Drawing.Size(230, 344);
+            this.AddonFactsView.TabIndex = 0;
+            this.AddonFactsView.UseCompatibleStateImageBehavior = false;
             // 
             // AddonPictureBox
             // 
             this.AddonPictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.AddonPictureBox.Location = new System.Drawing.Point(0, 0);
             this.AddonPictureBox.Name = "AddonPictureBox";
-            this.AddonPictureBox.Size = new System.Drawing.Size(217, 407);
+            this.AddonPictureBox.Size = new System.Drawing.Size(190, 344);
             this.AddonPictureBox.TabIndex = 0;
             this.AddonPictureBox.TabStop = false;
             // 
@@ -145,34 +164,26 @@
             this.AddonDescriptionText.Dock = System.Windows.Forms.DockStyle.Fill;
             this.AddonDescriptionText.Location = new System.Drawing.Point(0, 0);
             this.AddonDescriptionText.Name = "AddonDescriptionText";
-            this.AddonDescriptionText.Size = new System.Drawing.Size(485, 278);
+            this.AddonDescriptionText.Size = new System.Drawing.Size(424, 236);
             this.AddonDescriptionText.TabIndex = 0;
             this.AddonDescriptionText.Text = "";
             // 
-            // AddonListView
+            // menuStrip1
             // 
-            this.AddonListView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.AddonListView.Location = new System.Drawing.Point(3, 23);
-            this.AddonListView.Name = "AddonListView";
-            this.AddonListView.Size = new System.Drawing.Size(236, 1068);
-            this.AddonListView.TabIndex = 1;
-            this.AddonListView.UseCompatibleStateImageBehavior = false;
-            // 
-            // AddonFactsView
-            // 
-            this.AddonFactsView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.AddonFactsView.Location = new System.Drawing.Point(0, 0);
-            this.AddonFactsView.Name = "AddonFactsView";
-            this.AddonFactsView.Size = new System.Drawing.Size(264, 407);
-            this.AddonFactsView.TabIndex = 0;
-            this.AddonFactsView.UseCompatibleStateImageBehavior = false;
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(603, 24);
+            this.menuStrip1.TabIndex = 1;
+            this.menuStrip1.Text = "menuStrip1";
             // 
             // MainMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(731, 689);
+            this.ClientSize = new System.Drawing.Size(603, 608);
             this.Controls.Add(this.AddonList);
+            this.Controls.Add(this.menuStrip1);
+            this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainMenu";
             this.Text = "MainMenu";
             this.AddonList.Panel1.ResumeLayout(false);
@@ -191,6 +202,7 @@
             this.AddonFacts.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.AddonPictureBox)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -205,6 +217,7 @@
         private System.Windows.Forms.RichTextBox AddonDescriptionText;
         private System.Windows.Forms.ListView AddonListView;
         private System.Windows.Forms.ListView AddonFactsView;
+        private System.Windows.Forms.MenuStrip menuStrip1;
     }
 }
 

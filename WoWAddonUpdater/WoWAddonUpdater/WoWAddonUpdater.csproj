@@ -50,6 +50,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Addon.cs" />
+    <Compile Include="AddonView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="AddonView.Designer.cs">
+      <DependentUpon>AddonView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Defaults.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="MainMenu.cs">
@@ -64,6 +70,9 @@
     <Compile Include="SimilarityTester.cs" />
     <Compile Include="Structures.cs" />
     <Compile Include="Utils.cs" />
+    <EmbeddedResource Include="AddonView.resx">
+      <DependentUpon>AddonView.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainMenu.resx">
       <DependentUpon>MainMenu.cs</DependentUpon>
     </EmbeddedResource>
