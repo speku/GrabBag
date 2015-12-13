@@ -386,7 +386,7 @@ namespace WoWAddonUpdater
             if (error == null && !cancelled)
             {
                 State = States.Downloaded;
-                Utils.Unzip(to, Actual.addonAbsolutePath, Callback_UnzippingSuccessful);
+                Utils.Unzip(to, Utils.addonAbsolutePath, Callback_UnzippingSuccessful);
             }
             if (cancelled)
             {

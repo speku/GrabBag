@@ -34,6 +34,18 @@ namespace WoWAddonUpdater
 
         static public readonly string BLIZZARD_ADDON_PREFIX = "Blizzard_";
 
+        static public readonly string[] ACCEPTED_EXTENSIONS = { ".rar", ".zip" };
+
+        static public readonly Dictionary<string, string> TOC_PATTERNS_DEFAULT = new Dictionary<string, string>
+        {
+            {"title",  "Title: (.+?)(\\n|#)"},
+            {"author",  "Author: (.+?)(\\n|#)"},
+            {"version",  "Version: (.+?)(\\n|#)"},
+            {"notes",  "Notes: (.+?)(\\n|#)"},
+            {"interface",  "Interface: (.+?)(\\n|#)"},
+
+        };
+
         static public readonly Dictionary<Sites, Dictionary<int, ParseDetail>> SITE_TO_PATTERN_DEFAULT = new Dictionary<Sites, Dictionary<int, ParseDetail>>
         {
             {Sites.Curse, new Dictionary<int, ParseDetail>
@@ -62,17 +74,6 @@ namespace WoWAddonUpdater
         };
     }
 
-    class Actual
-    {
-
-        static public string wowBasePath = Environment.GetEnvironmentVariable("WoW");
-
-        static public string addonAbsolutePath = wowBasePath != null && Directory.Exists(wowBasePath) ? wowBasePath + Defaults.ADDON_RELATIVE_PATH_FROM_BASE_DIRECTORY :
-            Directory.Exists(Defaults.ADDON_ABSOLUTE_PATH_DEFAULT) ? Defaults.ADDON_ABSOLUTE_PATH_DEFAULT :
-            null;
-
-        static public string tocPattern;
-
-    }
+  
 }
 

@@ -9,6 +9,7 @@ using System.ComponentModel;
 using System.IO.Compression;
 using System.Text.RegularExpressions;
 using Microsoft.VisualBasic.FileIO;
+using System.Threading;
 
 namespace WoWAddonUpdater
 {
@@ -29,6 +30,13 @@ namespace WoWAddonUpdater
         public static double similarity = Defaults.SIMILARITY_DEFAULT;
         public static Sites site = Defaults.SITE_DEFAULT;
         public static Types type = Types.Alpha;
+
+
+        static public string wowBasePath = Environment.GetEnvironmentVariable("WoW");
+        static public string addonAbsolutePath = wowBasePath != null && Directory.Exists(wowBasePath) ? wowBasePath + Defaults.ADDON_RELATIVE_PATH_FROM_BASE_DIRECTORY :
+            Directory.Exists(Defaults.ADDON_ABSOLUTE_PATH_DEFAULT) ? Defaults.ADDON_ABSOLUTE_PATH_DEFAULT :
+            null;
+        static public string tocPattern;
 
 
         public static Results Download(string from, string to, out Action cancel, Action<float, string, string> callbackProgress = null, Action<Exception, bool, string, string> callbackCompleted = null)
@@ -147,7 +155,7 @@ namespace WoWAddonUpdater
 
         public static bool Initialized()
         {
-            if (Actual.addonAbsolutePath != null)
+            if (Utils.addonAbsolutePath != null)
             {
                 return true;
             }
@@ -158,7 +166,7 @@ namespace WoWAddonUpdater
         {
             if (Directory.Exists(path) && path.EndsWith(Defaults.ADDON_RELATIVE_PATH_DEFAULT))
             {
-                Actual.addonAbsolutePath = path;
+                Utils.addonAbsolutePath = path;
             }
             else
             {
@@ -341,13 +349,21 @@ namespace WoWAddonUpdater
 
                     if (i == 1 && SimilarityTester.CompareStrings(addon, newInput) < similarity)
                     {
+                        invalidAddonNames.Add(addon);
                         callbackCompleted(false, null, Results.InsufficientSimilarity);
                         return null;
                     }
                     if (i == stageToParseDetail.Count)
                     {
                         callbackCompleted(true, null, Results.Success);
-                        return newInput;
+                        if (HasProperExtension(newInput))
+                        {
+                            return newInput;
+                        } else
+                        {
+                            invalidAddonNames.Add(addon);
+                            return newInput;
+                        }
                     } else
                     {
                         inputs[i] = newInput;
@@ -355,11 +371,25 @@ namespace WoWAddonUpdater
                     }
                 } catch (Exception e)
                 {
+                    invalidAddonNames.Add(addon);
                     callbackProgress(i, stageToParseDetail.Count, e);
                     return null;
                 }
             }
             return null;
+        }
+
+
+        private static bool HasProperExtension(string downloadLink)
+        {
+            foreach (string extension in Defaults.ACCEPTED_EXTENSIONS)
+            {
+                if (downloadLink.EndsWith(extension))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
 
@@ -389,7 +419,7 @@ namespace WoWAddonUpdater
                     try
                     {
                         string text = File.ReadAllText(file);
-                        return Regex.Match(text, Actual.tocPattern != null ? Actual.tocPattern : Defaults.TOC_PATTERN_DEFAULT).Groups[1].Value.Replace("\r","");
+                        return Regex.Match(text, Utils.tocPattern != null ? Utils.tocPattern : Defaults.TOC_PATTERN_DEFAULT).Groups[1].Value.Replace("\r","");
                     }
                     catch
                     {
@@ -405,7 +435,7 @@ namespace WoWAddonUpdater
         {
             List<string> addons = new List<string>();
 
-            string addonDirectory = Directory.Exists(Actual.addonAbsolutePath) ? Actual.addonAbsolutePath : 
+            string addonDirectory = Directory.Exists(Utils.addonAbsolutePath) ? Utils.addonAbsolutePath : 
                 Directory.Exists(Defaults.ADDON_ABSOLUTE_PATH_DEFAULT) ? Defaults.ADDON_ABSOLUTE_PATH_DEFAULT : null;
 
             if (addonDirectory == null)
@@ -464,7 +494,9 @@ namespace WoWAddonUpdater
         {
             return (from name in names
                     where !(from addon in allAddons
-                           select addon.ParsedName).Contains(name)
+                           select addon.ParsedName).Contains(name) &&
+                           !(from addon in allAddons
+                             select addon.Name).Contains(name)
                     select new Addon(name, type, new List<Sites> { site })).ToList();
         }
 
@@ -478,11 +510,13 @@ namespace WoWAddonUpdater
 
         public static void start()
         {
+            ThreadPool.SetMinThreads(40, 40);
+
             foreach (Addon addon in CreateValidDistinctAddons())
             {
-                // addon.TryDownloadAsync();
-                 addon.TryDownload();
+                addon.TryDownloadAsync();
             }
+
         }
 
 
