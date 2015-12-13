@@ -8,12 +8,12 @@ namespace WoWAddonUpdater
 {
    internal struct ParseDetail
     {
-        public int input;
+        public List<int> inputs;
         public string basePage, pattern;
 
-        internal ParseDetail(int input, string basePage, string pattern)
+        internal ParseDetail(List<int> inputs, string basePage, string pattern)
         {
-            this.input = input;
+            this.inputs = inputs;
             this.basePage = basePage;
             this.pattern = pattern;
         }

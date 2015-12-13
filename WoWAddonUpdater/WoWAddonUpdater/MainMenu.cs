@@ -15,6 +15,7 @@ namespace WoWAddonUpdater
         public Form1()
         {
             InitializeComponent();
+            Utils.start();
         }
     }
 }

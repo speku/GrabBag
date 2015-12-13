@@ -12,7 +12,7 @@ namespace WoWAddonUpdater
     {
 
         public event Action<Addon, Exception, bool> DownloadCompleted;
-        public event Action<Addon, Exception, bool> ParsingCompleted;
+        public event Action<Addon, Exception, bool, Results> ParsingCompleted;
         public event Action<Addon, float> DownloadProgressChanged;
         public event Action<Addon, float, Exception> ParsingProgressChanged;
         public event Action<Addon, float> TotalProgressChanged;
@@ -31,6 +31,8 @@ namespace WoWAddonUpdater
 
 
         string name;
+
+        string parsedName;
 
         Types type;
 
@@ -303,9 +305,20 @@ namespace WoWAddonUpdater
             }
         }
 
+        public string ParsedName
+        {
+            get
+            {
+                return parsedName;
+            }
 
+            set
+            {
+                parsedName = value;
+            }
+        }
 
-        Addon(String name, Types type = Types.Unspecified, List<Sites> sites = null, string downloadLink = DOWNLOAD_DEFAULT, string image = IMAGE_DEFAULT, string description = DESCRIPTION_DEFAULT, string gameVersion = GAME_VERSION_DEFAULT)
+        internal Addon(String name, Types type = Types.Unspecified, List<Sites> sites = null, string downloadLink = DOWNLOAD_DEFAULT, string image = IMAGE_DEFAULT, string description = DESCRIPTION_DEFAULT, string gameVersion = GAME_VERSION_DEFAULT)
         {
             if (sites == null)
             {
@@ -348,12 +361,9 @@ namespace WoWAddonUpdater
 
         public Results Download(string path = null)
         {
-           if((path == null || path == "") && Directory.Exists(Defaults.DOWNLOAD_ABSOLUTE_PATH_DEFAULT))
+            if (path == null || path == "")
             {
                 path = Defaults.DOWNLOAD_ABSOLUTE_PATH_DEFAULT;
-            } else
-            {
-                return Results.DirectoryNotExisting;
             }
             return Utils.Download(downloadLink, path, out cancelDownload, Callback_DownloadProgressChanged, Callback_DownloadCompleted);
 
@@ -420,11 +430,11 @@ namespace WoWAddonUpdater
         }
 
 
-        private void Callback_ParsingCompleted(bool success, Exception error)
+        private void Callback_ParsingCompleted(bool success, Exception error, Results result)
         {
             if(ParsingCompleted != null)
             {
-                ParsingCompleted(this, error, success);
+                ParsingCompleted(this, error, success, result);
             }
         }
 
