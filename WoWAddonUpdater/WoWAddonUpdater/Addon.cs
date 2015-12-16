@@ -19,318 +19,76 @@ namespace WoWAddonUpdater
         public event Action<Addon, bool> UnzippingSuccessful;
         public event Action<Addon> Deleted;
 
-        const string NAME_DEFAULT = "";
-        const Types TYPE_DEFAULT = Types.Unspecified;
-        const Sites SITE_DEFAULT = Sites.Unspecified;
-        const string DOWNLOAD_DEFAULT = null;
-        const string IMAGE_DEFAULT = null;
-        const string DESCRIPTION_DEFAULT = null;
-        static readonly DateTime LAST_CHECKED_DEFAULT = DateTime.MinValue;
-        static readonly DateTime LAST_UPDATED_DEFAULT = DateTime.MinValue;
-        const string GAME_VERSION_DEFAULT = "1.0.0";
+        public string Title;
+        public string Author;
+        public string Interface;
+        public string Notes;
+        public string Version;
+        public string XEmail;
+        public string OptionalDeps;
+        public string LoadOnDemand;
+        public string SavedVariables;
+        public string XCurseRepositoryID;
+        public string XCurseProjectName;
+        public string XCurseProjectID;
+        public string XCursePackagedVersion;
+        public string XWebsite;
+        public string XCategory;
 
 
-        string name;
+        public string parsedTitle;
 
-        string parsedName;
+        public Types type;
 
-        Types type;
+        public List<Sites> sites;
 
-        List<Sites> sites;
+        public string downloadLink;
 
-        string downloadLink;
+        public string image;
 
-        string image;
+        public string description;
 
-        string description;
+        public DateTime lastChecked;
 
-        DateTime lastChecked;
+        public DateTime lastUpdated;
 
-        DateTime lastUpdated;
+        public Action cancelDownload;
 
-        string gameVersion;
+        public States state;
 
-        Action cancelDownload;
+        public bool selected;
 
-        States state;
+        public bool enabled;
 
-        bool selected;
+        public double size;
 
-        bool enabled;
+        public string sizeUnit = "MB";
 
-        double size;
+        public string downloadedBy;
 
-        string author;
-
-        string sizeUnit = "MB";
-
-        string downloadedBy;
-
-        int id;
-
-        List<string> absolutePaths = new List<string>();
+        public List<string> absolutePaths = new List<string>();
 
 
-        public string DownloadLink
+       
+
+
+        internal Addon()
         {
-            get
-            {
-                return downloadLink;
-            }
-
-            set
-            {
-                downloadLink = value;
-            }
         }
 
-        public string Image
-        {
-            get
-            {
-                return image;
-            }
-
-            set
-            {
-                image = value;
-            }
-        }
-
-        public string Name
-        {
-            get
-            {
-                return name;
-            }
-
-            set
-            {
-                name = value;
-            }
-        }
-
-        internal Types Type
-        {
-            get
-            {
-                return type;
-            }
-
-            set
-            {
-                type = value;
-            }
-        }
-
-        internal List<Sites> Site
-        {
-            get
-            {
-                return sites;
-            }
-
-            set
-            {
-                sites = value;
-            }
-        }
-
-        public string Description
-        {
-            get
-            {
-                return description;
-            }
-
-            set
-            {
-                description = value;
-            }
-        }
-
-        public DateTime LastChecked
-        {
-            get
-            {
-                return lastChecked;
-            }
-
-            set
-            {
-                lastChecked = value;
-            }
-        }
-
-        public DateTime LastUpdated
-        {
-            get
-            {
-                return lastUpdated;
-            }
-
-            set
-            {
-                lastUpdated = value;
-            }
-        }
-
-        public string GameVersion
-        {
-            get
-            {
-                return gameVersion;
-            }
-
-            set
-            {
-                gameVersion = value;
-            }
-        }
-
-        internal States State
-        {
-            get
-            {
-                return state;
-            }
-
-            set
-            {
-                state = value;
-            }
-        }
-
-        public int ID
-        {
-            get
-            {
-                return id;
-            }
-
-            set
-            {
-                id = value;
-            }
-        }
-        
-        public List<string> AbsolutePaths
-        {
-            get
-            {
-                return absolutePaths;
-            }
-
-            set
-            {
-                absolutePaths = value;
-            }
-        }
-
-        public bool Selected
-        {
-            get
-            {
-                return selected;
-            }
-
-            set
-            {
-                selected = value;
-            }
-        }
-
-        public bool Enabled
-        {
-            get
-            {
-                return enabled;
-            }
-
-            set
-            {
-                enabled = value;
-            }
-        }
-
-        public double Size
-        {
-            get
-            {
-                return size;
-            }
-
-            set
-            {
-                size = value;
-            }
-        }
-
-        public string Author
-        {
-            get
-            {
-                return author;
-            }
-
-            set
-            {
-                author = value;
-            }
-        }
-
-        public string SizeUnit
-        {
-            get
-            {
-                return sizeUnit;
-            }
-
-            set
-            {
-                sizeUnit = value;
-            }
-        }
-
-        public string DownloadedBy
-        {
-            get
-            {
-                return downloadedBy;
-            }
-
-            set
-            {
-                downloadedBy = value;
-            }
-        }
-
-        public string ParsedName
-        {
-            get
-            {
-                return parsedName;
-            }
-
-            set
-            {
-                parsedName = value;
-            }
-        }
-
-        internal Addon(String name, Types type = Types.Unspecified, List<Sites> sites = null, string downloadLink = DOWNLOAD_DEFAULT, string image = IMAGE_DEFAULT, string description = DESCRIPTION_DEFAULT, string gameVersion = GAME_VERSION_DEFAULT)
+        internal Addon(String title, Types type = Types.Unspecified, List<Sites> sites = null, string downloadLink = Defaults.DOWNLOAD_DEFAULT, string image = Defaults.IMAGE_DEFAULT, string description = Defaults.DESCRIPTION_DEFAULT, string Interface = Defaults.INTERFACE_DEFAULT)
         {
             if (sites == null)
             {
                 sites = new List<Sites> { Sites.Unspecified };
             }
-            this.Name = name;
-            this.Type = type;
-            this.Site = sites;
-            this.DownloadLink = downloadLink;
-            this.Image = image;
-            this.Description = description;
-            this.GameVersion = gameVersion;
+            this.Title = title;
+            this.type = type;
+            this.sites = sites;
+            this.downloadLink = downloadLink;
+            this.image = image;
+            this.description = description;
+            this.Interface = Interface;
         }
 
 
@@ -343,11 +101,11 @@ namespace WoWAddonUpdater
         public void TryDownload()
         {
             string url = null;
-            int total = Site.Count;
+            int total = sites.Count;
             int current = 1;
-            foreach (Sites s in Site)
+            foreach (Sites s in sites)
             {
-                url = Utils.GetDownloadURL(s, Name, Callback_ParsingProgressChanged, Callback_ParsingCompleted);
+                url = Utils.GetDownloadURL(s, Title, Callback_ParsingProgressChanged, Callback_ParsingCompleted);
                 if (url != null)
                 {
                     downloadLink = url;
@@ -372,7 +130,7 @@ namespace WoWAddonUpdater
 
         private void Callback_DownloadProgressChanged(float percentage, string from, string to)
         {
-            State = States.Downloading;
+            state = States.Downloading;
             if(DownloadProgressChanged != null)
             {
                 DownloadProgressChanged(this, percentage);
@@ -385,16 +143,16 @@ namespace WoWAddonUpdater
             cancelDownload = null;
             if (error == null && !cancelled)
             {
-                State = States.Downloaded;
+                state = States.Downloaded;
                 Utils.Unzip(to, Utils.addonAbsolutePath, Callback_UnzippingSuccessful);
             }
             if (cancelled)
             {
-                State = States.Cancelled;
+                state = States.Cancelled;
             }
             else if (error != null)
             {
-                State = States.DownloadError;
+                state = States.DownloadError;
             }
             if (DownloadCompleted != null)
             {
@@ -408,10 +166,10 @@ namespace WoWAddonUpdater
         {
             if (!success)
             {
-                State = States.ExtractionError;
+                state = States.ExtractionError;
             } else
             {
-                State = States.Extracted;
+                state = States.Extracted;
             }
             if(UnzippingSuccessful != null)
             {
@@ -422,7 +180,7 @@ namespace WoWAddonUpdater
 
         private void Callback_ParsingProgressChanged(int currentStage, int totalStages, Exception error)
         {
-            State = States.Parsing;
+            state = States.Parsing;
             if(DownloadProgressChanged != null)
             {
                 ParsingProgressChanged(this, (currentStage / totalStages) * 100, error);
@@ -452,7 +210,7 @@ namespace WoWAddonUpdater
 
         public void Delete(List<Addon> addons = null)
         {
-            foreach (string path in AbsolutePaths)
+            foreach (string path in absolutePaths)
             {
                 if (Directory.Exists(path))
                 {

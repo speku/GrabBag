@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Addon.cs" />
+    <Compile Include="AddonMeta.cs" />
     <Compile Include="AddonView.cs">
       <SubType>UserControl</SubType>
     </Compile>

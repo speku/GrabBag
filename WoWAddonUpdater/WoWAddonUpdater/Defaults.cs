@@ -36,6 +36,14 @@ namespace WoWAddonUpdater
 
         static public readonly string[] ACCEPTED_EXTENSIONS = { ".rar", ".zip" };
 
+        public const string NAME_DEFAULT = "";
+        public const string DOWNLOAD_DEFAULT = null;
+        public const string IMAGE_DEFAULT = null;
+        public const string DESCRIPTION_DEFAULT = null;
+        public static readonly DateTime LAST_CHECKED_DEFAULT = DateTime.MinValue;
+        public static readonly DateTime LAST_UPDATED_DEFAULT = DateTime.MinValue;
+        public const string INTERFACE_DEFAULT = "1.0.0";
+
         static public readonly Dictionary<string, string> TOC_PATTERNS_DEFAULT = new Dictionary<string, string>
         {
             {"title",  "Title: (.+?)(\\n|#)"},

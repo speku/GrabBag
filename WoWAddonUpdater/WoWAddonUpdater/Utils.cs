@@ -17,8 +17,8 @@ namespace WoWAddonUpdater
     {
 
         public static List<Addon> allAddons = new List<Addon>();
-        public static List<string> invalidAddonNames = new List<string>();
-        public static List<string> parsedNames = new List<string>();
+        public static List<string> invalidAddonTitles = new List<string>();
+        public static List<string> parsedTitles = new List<string>();
 
         public static Dictionary<Sites, Dictionary<int, ParseDetail>> siteToPattern = new Dictionary<Sites, Dictionary<int, ParseDetail>>();
         public static Dictionary<Sites, Func<string, string>> siteToSearchStringReplacement = new Dictionary<Sites, Func<string, string>>();
@@ -180,7 +180,7 @@ namespace WoWAddonUpdater
 
         public static IEnumerable<Addon> Addons(States state)
         {
-            return allAddons.Where(a => a.State == state);
+            return allAddons.Where(a => a.state == state);
         }
 
 
@@ -193,7 +193,7 @@ namespace WoWAddonUpdater
         public static void DeleteAddons(States state)
         {
 
-            foreach (Addon addon in allAddons.Where(a => a.State == state))
+            foreach (Addon addon in allAddons.Where(a => a.state == state))
             {
                 addon.Delete();
             }
@@ -202,16 +202,16 @@ namespace WoWAddonUpdater
 
         public static void DeleteAddons(string name)
         {
-            foreach (Addon addon in allAddons.Where(a => a.Name == name))
+            foreach (Addon addon in allAddons.Where(a => a.Title == name))
             {
                 addon.Delete();
             }
         }
 
 
-        public static void DeleteAddons(int id)
+        public static void DeleteAddonsByID(string id)
         {
-            foreach (Addon addon in allAddons.Where(a => a.ID == id))
+            foreach (Addon addon in allAddons.Where(a => a.XCurseProjectID == id))
             {
                 addon.Delete();
             }
@@ -233,8 +233,8 @@ namespace WoWAddonUpdater
 
             foreach (Addon addon in allAddons)
             {
-                addon.AbsolutePaths.RemoveAll(p => !File.Exists(p));
-                if (addon.AbsolutePaths.Count < 1)
+                addon.absolutePaths.RemoveAll(p => !File.Exists(p));
+                if (addon.absolutePaths.Count < 1)
                 {
                     purged.Add(addon);
                 }
@@ -250,7 +250,7 @@ namespace WoWAddonUpdater
         {
             foreach (Addon addon in addons)
             {
-                foreach (string path in addon.AbsolutePaths)
+                foreach (string path in addon.absolutePaths)
                 {
                     if (Directory.Exists(path))
                     {
@@ -339,17 +339,17 @@ namespace WoWAddonUpdater
                 try
                 {
                     string newInput = Regex.Match(URLToString(detail.basePage), detail.pattern).Groups[1].Value;
-                    if (parsedNames.Contains(newInput))
+                    if (parsedTitles.Contains(newInput))
                     {
                         return null;
                     } else
                     {
-                        parsedNames.Add(newInput);
+                        parsedTitles.Add(newInput);
                     }
 
                     if (i == 1 && SimilarityTester.CompareStrings(addon, newInput) < similarity)
                     {
-                        invalidAddonNames.Add(addon);
+                        invalidAddonTitles.Add(addon);
                         callbackCompleted(false, null, Results.InsufficientSimilarity);
                         return null;
                     }
@@ -361,7 +361,7 @@ namespace WoWAddonUpdater
                             return newInput;
                         } else
                         {
-                            invalidAddonNames.Add(addon);
+                            invalidAddonTitles.Add(addon);
                             return newInput;
                         }
                     } else
@@ -371,7 +371,7 @@ namespace WoWAddonUpdater
                     }
                 } catch (Exception e)
                 {
-                    invalidAddonNames.Add(addon);
+                    invalidAddonTitles.Add(addon);
                     callbackProgress(i, stageToParseDetail.Count, e);
                     return null;
                 }
@@ -410,32 +410,25 @@ namespace WoWAddonUpdater
         }
 
 
-        public static string ParseToc(string dir)
+
+        public static AddonMeta ParseMetaData(string dir)
         {
-            foreach(string file in Directory.GetFiles(dir))
+            foreach (string file in Directory.GetFiles(dir))
             {
                 if (file.EndsWith(".toc"))
                 {
-                    try
-                    {
-                        string text = File.ReadAllText(file);
-                        return Regex.Match(text, Utils.tocPattern != null ? Utils.tocPattern : Defaults.TOC_PATTERN_DEFAULT).Groups[1].Value.Replace("\r","");
-                    }
-                    catch
-                    {
-                        break;
-                    }
+                    return new AddonMeta(dir);
                 }
             }
             return null;
         }
 
 
-        public static List<string> GetAddonNames()
+        public static List<AddonMeta> GetAddonMetaData()
         {
-            List<string> addons = new List<string>();
+            List<AddonMeta> addons = new List<AddonMeta>();
 
-            string addonDirectory = Directory.Exists(Utils.addonAbsolutePath) ? Utils.addonAbsolutePath : 
+            string addonDirectory = Directory.Exists(Utils.addonAbsolutePath) ? Utils.addonAbsolutePath :
                 Directory.Exists(Defaults.ADDON_ABSOLUTE_PATH_DEFAULT) ? Defaults.ADDON_ABSOLUTE_PATH_DEFAULT : null;
 
             if (addonDirectory == null)
@@ -448,26 +441,27 @@ namespace WoWAddonUpdater
                     {
                         return addons;
                     }
-                } else
+                }
+                else
                 {
                     return addons;
                 }
             }
 
-            
+
 
             foreach (string dir in Directory.GetDirectories(addonDirectory))
             {
                 if (!dir.Contains(Defaults.BLIZZARD_ADDON_PREFIX))
                 {
-                    string preciseName = ParseToc(dir);
-                    if (preciseName != null)
+                    AddonMeta data = ParseMetaData(dir);
+                    if (data != null)
                     {
-                        addons.Add(preciseName);
+                        addons.Add(data);
                     }
                     else
                     {
-                        addons.Add(dir.Split('\\').Last());
+                        addons.Add(new AddonMeta((dir.Split('\\').Last())));
                     }
                 }
             }
@@ -476,34 +470,32 @@ namespace WoWAddonUpdater
         }
 
 
-        public static List<string> RemoveInvalidAddonNames(List<string> addonNames)
+        public static List<AddonMeta> RemoveInvalidAddonMetaData(List<AddonMeta> metaData)
         {
-            List<string> addonNamesToBePurged = new List<string>(addonNames);
-            addonNamesToBePurged.RemoveAll((a) => invalidAddonNames.Contains(a));
+            List<AddonMeta> addonNamesToBePurged = new List<AddonMeta>(metaData);
+            addonNamesToBePurged.RemoveAll((a) => invalidAddonTitles.Contains(a.GetMeta("Title")));
             return addonNamesToBePurged;
         }
 
 
-        public static List<string> GetValidAddonNames()
+        public static List<AddonMeta> GetValidAddonMetaData()
         {
-            return RemoveInvalidAddonNames(GetAddonNames());
+            return RemoveInvalidAddonMetaData(GetAddonMetaData());
         }
 
 
-        public static List<Addon> CreateDisctinctAddons(List<string> names)
+        public static List<Addon> CreateDisctinctAddons(List<AddonMeta> metaData)
         {
-            return (from name in names
-                    where !(from addon in allAddons
-                           select addon.ParsedName).Contains(name) &&
-                           !(from addon in allAddons
-                             select addon.Name).Contains(name)
-                    select new Addon(name, type, new List<Sites> { site })).ToList();
+            return (from data in metaData
+                   where !(from addon in allAddons select addon.parsedTitle).Contains(data.GetMeta("title")) &&
+                   !(from addon in allAddons select addon.Title).Contains(data.GetMeta("title"))
+                   select data.CreateAddon()).ToList();
         }
 
 
         public static List<Addon> CreateValidDistinctAddons()
         {
-            return CreateDisctinctAddons(GetValidAddonNames());
+            return CreateDisctinctAddons(GetValidAddonMetaData());
         }
 
 
