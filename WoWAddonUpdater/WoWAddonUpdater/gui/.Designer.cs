@@ -28,25 +28,25 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.TopTableLayout = new System.Windows.Forms.TableLayoutPanel();
-            this.AddonList = new System.Windows.Forms.SplitContainer();
+            this.MenuStrip = new System.Windows.Forms.MenuStrip();
+            this.BaseTableLayout = new System.Windows.Forms.TableLayoutPanel();
+            this.AddonsSplitContainer = new System.Windows.Forms.SplitContainer();
             this.AddonListView = new System.Windows.Forms.ListView();
             this.AddonDetails = new System.Windows.Forms.SplitContainer();
             this.AddonFacts = new System.Windows.Forms.SplitContainer();
             this.AddonFactsView = new System.Windows.Forms.ListView();
             this.AddonPictureBox = new System.Windows.Forms.PictureBox();
             this.AddonDescriptionText = new System.Windows.Forms.RichTextBox();
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.AddonTagComboBox = new System.Windows.Forms.ComboBox();
-            this.AddonSearchBox = new System.Windows.Forms.TextBox();
-            this.AddonProgress = new System.Windows.Forms.ProgressBar();
-            this.TopTableLayout.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.AddonList)).BeginInit();
-            this.AddonList.Panel1.SuspendLayout();
-            this.AddonList.Panel2.SuspendLayout();
-            this.AddonList.SuspendLayout();
+            this.TopTableLayout = new System.Windows.Forms.TableLayoutPanel();
+            this.SelectionSplitContainer = new System.Windows.Forms.SplitContainer();
+            this.TagsComboBox = new System.Windows.Forms.ComboBox();
+            this.SearchTextBox = new System.Windows.Forms.TextBox();
+            this.TotalProgressBar = new System.Windows.Forms.ProgressBar();
+            this.BaseTableLayout.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.AddonsSplitContainer)).BeginInit();
+            this.AddonsSplitContainer.Panel1.SuspendLayout();
+            this.AddonsSplitContainer.Panel2.SuspendLayout();
+            this.AddonsSplitContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.AddonDetails)).BeginInit();
             this.AddonDetails.Panel1.SuspendLayout();
             this.AddonDetails.Panel2.SuspendLayout();
@@ -56,52 +56,52 @@
             this.AddonFacts.Panel2.SuspendLayout();
             this.AddonFacts.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.AddonPictureBox)).BeginInit();
-            this.tableLayoutPanel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
+            this.TopTableLayout.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.SelectionSplitContainer)).BeginInit();
+            this.SelectionSplitContainer.Panel1.SuspendLayout();
+            this.SelectionSplitContainer.Panel2.SuspendLayout();
+            this.SelectionSplitContainer.SuspendLayout();
             this.SuspendLayout();
             // 
-            // menuStrip1
+            // MenuStrip
             // 
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(481, 24);
-            this.menuStrip1.TabIndex = 1;
-            this.menuStrip1.Text = "menuStrip1";
+            this.MenuStrip.Location = new System.Drawing.Point(0, 0);
+            this.MenuStrip.Name = "MenuStrip";
+            this.MenuStrip.Size = new System.Drawing.Size(481, 24);
+            this.MenuStrip.TabIndex = 1;
+            this.MenuStrip.Text = "menuStrip1";
             // 
-            // TopTableLayout
+            // BaseTableLayout
             // 
-            this.TopTableLayout.ColumnCount = 1;
-            this.TopTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.TopTableLayout.Controls.Add(this.AddonList, 0, 1);
-            this.TopTableLayout.Controls.Add(this.tableLayoutPanel2, 0, 0);
-            this.TopTableLayout.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TopTableLayout.Location = new System.Drawing.Point(0, 24);
-            this.TopTableLayout.Name = "TopTableLayout";
-            this.TopTableLayout.RowCount = 2;
-            this.TopTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.TopTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.TopTableLayout.Size = new System.Drawing.Size(481, 443);
-            this.TopTableLayout.TabIndex = 2;
+            this.BaseTableLayout.ColumnCount = 1;
+            this.BaseTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.BaseTableLayout.Controls.Add(this.AddonsSplitContainer, 0, 1);
+            this.BaseTableLayout.Controls.Add(this.TopTableLayout, 0, 0);
+            this.BaseTableLayout.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BaseTableLayout.Location = new System.Drawing.Point(0, 24);
+            this.BaseTableLayout.Name = "BaseTableLayout";
+            this.BaseTableLayout.RowCount = 2;
+            this.BaseTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.BaseTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.BaseTableLayout.Size = new System.Drawing.Size(481, 443);
+            this.BaseTableLayout.TabIndex = 2;
             // 
-            // AddonList
+            // AddonsSplitContainer
             // 
-            this.AddonList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.AddonList.Location = new System.Drawing.Point(3, 33);
-            this.AddonList.Name = "AddonList";
+            this.AddonsSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.AddonsSplitContainer.Location = new System.Drawing.Point(3, 33);
+            this.AddonsSplitContainer.Name = "AddonsSplitContainer";
             // 
-            // AddonList.Panel1
+            // AddonsSplitContainer.Panel1
             // 
-            this.AddonList.Panel1.Controls.Add(this.AddonListView);
+            this.AddonsSplitContainer.Panel1.Controls.Add(this.AddonListView);
             // 
-            // AddonList.Panel2
+            // AddonsSplitContainer.Panel2
             // 
-            this.AddonList.Panel2.Controls.Add(this.AddonDetails);
-            this.AddonList.Size = new System.Drawing.Size(475, 407);
-            this.AddonList.SplitterDistance = 141;
-            this.AddonList.TabIndex = 1;
+            this.AddonsSplitContainer.Panel2.Controls.Add(this.AddonDetails);
+            this.AddonsSplitContainer.Size = new System.Drawing.Size(475, 407);
+            this.AddonsSplitContainer.SplitterDistance = 141;
+            this.AddonsSplitContainer.TabIndex = 1;
             // 
             // AddonListView
             // 
@@ -175,78 +175,78 @@
             this.AddonDescriptionText.TabIndex = 0;
             this.AddonDescriptionText.Text = "";
             // 
-            // tableLayoutPanel2
+            // TopTableLayout
             // 
-            this.tableLayoutPanel2.ColumnCount = 2;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 29.81878F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 70.18122F));
-            this.tableLayoutPanel2.Controls.Add(this.splitContainer1, 1, 0);
-            this.tableLayoutPanel2.Controls.Add(this.AddonProgress, 0, 0);
-            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 3);
-            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 1;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(475, 24);
-            this.tableLayoutPanel2.TabIndex = 2;
+            this.TopTableLayout.ColumnCount = 2;
+            this.TopTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 29.81878F));
+            this.TopTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 70.18122F));
+            this.TopTableLayout.Controls.Add(this.SelectionSplitContainer, 1, 0);
+            this.TopTableLayout.Controls.Add(this.TotalProgressBar, 0, 0);
+            this.TopTableLayout.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TopTableLayout.Location = new System.Drawing.Point(3, 3);
+            this.TopTableLayout.Name = "TopTableLayout";
+            this.TopTableLayout.RowCount = 1;
+            this.TopTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.TopTableLayout.Size = new System.Drawing.Size(475, 24);
+            this.TopTableLayout.TabIndex = 2;
             // 
-            // splitContainer1
+            // SelectionSplitContainer
             // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(144, 3);
-            this.splitContainer1.Name = "splitContainer1";
+            this.SelectionSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.SelectionSplitContainer.Location = new System.Drawing.Point(144, 3);
+            this.SelectionSplitContainer.Name = "SelectionSplitContainer";
             // 
-            // splitContainer1.Panel1
+            // SelectionSplitContainer.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.AddonTagComboBox);
+            this.SelectionSplitContainer.Panel1.Controls.Add(this.TagsComboBox);
             // 
-            // splitContainer1.Panel2
+            // SelectionSplitContainer.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.AddonSearchBox);
-            this.splitContainer1.Size = new System.Drawing.Size(328, 18);
-            this.splitContainer1.SplitterDistance = 147;
-            this.splitContainer1.TabIndex = 0;
+            this.SelectionSplitContainer.Panel2.Controls.Add(this.SearchTextBox);
+            this.SelectionSplitContainer.Size = new System.Drawing.Size(328, 18);
+            this.SelectionSplitContainer.SplitterDistance = 147;
+            this.SelectionSplitContainer.TabIndex = 0;
             // 
-            // AddonTagComboBox
+            // TagsComboBox
             // 
-            this.AddonTagComboBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.AddonTagComboBox.FormattingEnabled = true;
-            this.AddonTagComboBox.Location = new System.Drawing.Point(0, 0);
-            this.AddonTagComboBox.Name = "AddonTagComboBox";
-            this.AddonTagComboBox.Size = new System.Drawing.Size(147, 21);
-            this.AddonTagComboBox.TabIndex = 0;
+            this.TagsComboBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TagsComboBox.FormattingEnabled = true;
+            this.TagsComboBox.Location = new System.Drawing.Point(0, 0);
+            this.TagsComboBox.Name = "TagsComboBox";
+            this.TagsComboBox.Size = new System.Drawing.Size(147, 21);
+            this.TagsComboBox.TabIndex = 0;
             // 
-            // AddonSearchBox
+            // SearchTextBox
             // 
-            this.AddonSearchBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.AddonSearchBox.Location = new System.Drawing.Point(0, 0);
-            this.AddonSearchBox.Name = "AddonSearchBox";
-            this.AddonSearchBox.Size = new System.Drawing.Size(177, 20);
-            this.AddonSearchBox.TabIndex = 0;
+            this.SearchTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.SearchTextBox.Location = new System.Drawing.Point(0, 0);
+            this.SearchTextBox.Name = "SearchTextBox";
+            this.SearchTextBox.Size = new System.Drawing.Size(177, 20);
+            this.SearchTextBox.TabIndex = 0;
             // 
-            // AddonProgress
+            // TotalProgressBar
             // 
-            this.AddonProgress.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.AddonProgress.Location = new System.Drawing.Point(3, 3);
-            this.AddonProgress.Name = "AddonProgress";
-            this.AddonProgress.Size = new System.Drawing.Size(135, 18);
-            this.AddonProgress.TabIndex = 1;
+            this.TotalProgressBar.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TotalProgressBar.Location = new System.Drawing.Point(3, 3);
+            this.TotalProgressBar.Name = "TotalProgressBar";
+            this.TotalProgressBar.Size = new System.Drawing.Size(135, 18);
+            this.TotalProgressBar.TabIndex = 1;
             // 
             // MainMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(481, 467);
-            this.Controls.Add(this.TopTableLayout);
-            this.Controls.Add(this.menuStrip1);
-            this.MainMenuStrip = this.menuStrip1;
+            this.Controls.Add(this.BaseTableLayout);
+            this.Controls.Add(this.MenuStrip);
+            this.MainMenuStrip = this.MenuStrip;
             this.Name = "MainMenu";
             this.Text = "MainMenu";
-            this.TopTableLayout.ResumeLayout(false);
-            this.AddonList.Panel1.ResumeLayout(false);
-            this.AddonList.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.AddonList)).EndInit();
-            this.AddonList.ResumeLayout(false);
+            this.BaseTableLayout.ResumeLayout(false);
+            this.AddonsSplitContainer.Panel1.ResumeLayout(false);
+            this.AddonsSplitContainer.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.AddonsSplitContainer)).EndInit();
+            this.AddonsSplitContainer.ResumeLayout(false);
             this.AddonDetails.Panel1.ResumeLayout(false);
             this.AddonDetails.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.AddonDetails)).EndInit();
@@ -256,32 +256,32 @@
             ((System.ComponentModel.ISupportInitialize)(this.AddonFacts)).EndInit();
             this.AddonFacts.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.AddonPictureBox)).EndInit();
-            this.tableLayoutPanel2.ResumeLayout(false);
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            this.splitContainer1.Panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-            this.splitContainer1.ResumeLayout(false);
+            this.TopTableLayout.ResumeLayout(false);
+            this.SelectionSplitContainer.Panel1.ResumeLayout(false);
+            this.SelectionSplitContainer.Panel2.ResumeLayout(false);
+            this.SelectionSplitContainer.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.SelectionSplitContainer)).EndInit();
+            this.SelectionSplitContainer.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-        private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.ComboBox AddonTagComboBox;
-        private System.Windows.Forms.TextBox AddonSearchBox;
-        private System.Windows.Forms.ProgressBar AddonProgress;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+        private System.Windows.Forms.MenuStrip MenuStrip;
+        private System.Windows.Forms.SplitContainer SelectionSplitContainer;
+        private System.Windows.Forms.ComboBox TagsComboBox;
+        private System.Windows.Forms.TextBox SearchTextBox;
+        private System.Windows.Forms.ProgressBar TotalProgressBar;
+        private System.Windows.Forms.TableLayoutPanel TopTableLayout;
         private System.Windows.Forms.RichTextBox AddonDescriptionText;
         private System.Windows.Forms.PictureBox AddonPictureBox;
         private System.Windows.Forms.ListView AddonFactsView;
         private System.Windows.Forms.SplitContainer AddonFacts;
         private System.Windows.Forms.SplitContainer AddonDetails;
         private System.Windows.Forms.ListView AddonListView;
-        private System.Windows.Forms.SplitContainer AddonList;
-        private System.Windows.Forms.TableLayoutPanel TopTableLayout;
+        private System.Windows.Forms.SplitContainer AddonsSplitContainer;
+        private System.Windows.Forms.TableLayoutPanel BaseTableLayout;
     }
 }
 

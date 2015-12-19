@@ -77,13 +77,13 @@ namespace WoWAddonUpdater
              {Sites.CurseForge, new Dictionary<int, ParseDetail>
             {
                 {1, new ParseDetail(new List<int> { 0 },"http://wow.curseforge.com/search/?search={0}&site=all","<tr class=\"odd row-joined-to-next\">(.|\n)+?<a href=\"(.+?)\"><mark>") },
-                {2, new ParseDetail(new List<int> { 1 },"http://wow.curseforge.com/addons/{0}/","<dt>Recent files</dt>(.|\n)+?<a href=\"/addons/.+?/files/(.+?)/\">") },
+                {2, new ParseDetail(new List<int> { 1 },"http://wow.curseforge.com/addons/{0}/","<dt>Recent files</dt>(.|\n)+?<a href=\"/addons/.+?/files/(.+?)/\">", true) },
                 {3, new ParseDetail(new List<int> { 1, 2 },"http://wow.curseforge.com/addons/{0}/files/{1}/","<dt>Filename</dt>(.|\n)+?<a href=\"(.+?)\">") }
             } },
               {Sites.WoWAce, new Dictionary<int, ParseDetail>
             {
                 {1, new ParseDetail(new List<int> { 0 }, "http://www.wowace.com/search/?search={0}&site=all", "<td class=\"col-search-entry\"><h2><a href=\"/addons/(.+?)/\"><mark>" ) },
-                  {2, new ParseDetail(new List<int> { 1 }, "http://www.wowace.com/addons/{0}/", "<dt>Recent files</dt>.*\n+.+?<a href=\"/addons/.+?/files/(.+?)/\">") },
+                  {2, new ParseDetail(new List<int> { 1 }, "http://www.wowace.com/addons/{0}/", "<dt>Recent files</dt>.*\n+.+?<a href=\"/addons/.+?/files/(.+?)/\">", true) },
                   {3,  new ParseDetail(new List<int> { 1, 2 },"http://www.wowace.com/addons/{0}/files/{1}/","<dt>Filename</dt>\n+.+?<dd><a href=\"(.+?)\">") }
             } },
                {Sites.WoWInterface, new Dictionary<int, ParseDetail>

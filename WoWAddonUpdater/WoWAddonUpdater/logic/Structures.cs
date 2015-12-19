@@ -10,12 +10,14 @@ namespace WoWAddonUpdater
     {
         public List<int> inputs;
         public string basePage, pattern;
+        public bool entryPoint;
 
-        internal ParseDetail(List<int> inputs, string basePage, string pattern)
+        internal ParseDetail(List<int> inputs, string basePage, string pattern, bool entryPoint = false)
         {
             this.inputs = inputs;
             this.basePage = basePage;
             this.pattern = pattern;
+            this.entryPoint = entryPoint;
         }
     }
 }

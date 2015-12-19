@@ -312,17 +312,29 @@ namespace WoWAddonUpdater
 
 
 
-        internal static string GetDownloadURL(Sites site, string addon, Action<int, int, Exception> callbackProgress, Action<bool, Exception, Results> callbackCompleted)
+        internal static string GetDownloadURL(Sites site, Addon addon, Action<int, int, Exception> callbackProgress, Action<bool, Exception, Results> callbackCompleted)
         {
             Dictionary<int, ParseDetail> stageToParseDetail = Config.Settings.siteToPattern.ContainsKey(site) ? Config.Settings.siteToPattern[site] : Defaults.SITE_TO_PATTERN_DEFAULT[site];
-            Dictionary<int, string> inputs = new Dictionary<int, string>();
+            Dictionary<int, string> inputs = null;
+            int start = 1;
+            if (addon.inputs != null)
+            {
+                addon.inputs.TryGetValue(site, out inputs);
+            }
+            if (inputs == null)
+            {
+                inputs = new Dictionary<int, string>();
+            } else
+            {
+                start = stageToParseDetail.ToList().Where((kv) => kv.Value.entryPoint).ToList()[0].Key;
+            }
 
-            for (int i = 1; i <= stageToParseDetail.Count; i++)
+            for (int i = start; i <= stageToParseDetail.Count; i++)
             {
                 var detail = stageToParseDetail[i];
                 if (detail.inputs.Count > 0)
                 {
-                    InjectInputIntoBasePage(site, ref detail, inputs, addon);
+                    InjectInputIntoBasePage(site, ref detail, inputs, addon.Title);
                 }
                 try
                 {
@@ -335,9 +347,9 @@ namespace WoWAddonUpdater
                         Config.Settings.parsedTitles.Add(newInput);
                     }
 
-                    if (i == 1 && SimilarityTester.CompareStrings(addon, newInput) < Config.Settings.similarity)
+                    if (i == 1 && SimilarityTester.CompareStrings(addon.Title, newInput) < Config.Settings.similarity)
                     {
-                        Config.Settings.invalidAddonTitles.Add(addon);
+                        Config.Settings.invalidAddonTitles.Add(addon.Title);
                         callbackCompleted(false, null, Results.InsufficientSimilarity);
                         return null;
                     }
@@ -346,11 +358,16 @@ namespace WoWAddonUpdater
                         callbackCompleted(true, null, Results.Success);
                         if (HasProperExtension(newInput))
                         {
+                            if (addon.inputs == null)
+                            {
+                                addon.inputs = new Dictionary<Sites, Dictionary<int, string>>();
+                            }
+                            addon.inputs[site] = inputs;
                             return newInput;
                         } else
                         {
-                            Config.Settings.invalidAddonTitles.Add(addon);
-                            return newInput;
+                            Config.Settings.invalidAddonTitles.Add(addon.Title);
+                            return null;
                         }
                     } else
                     {
@@ -359,7 +376,7 @@ namespace WoWAddonUpdater
                     }
                 } catch (Exception e)
                 {
-                    Config.Settings.invalidAddonTitles.Add(addon);
+                    Config.Settings.invalidAddonTitles.Add(addon.Title);
                     callbackProgress(i, stageToParseDetail.Count, e);
                     return null;
                 }

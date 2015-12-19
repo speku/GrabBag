@@ -45,6 +45,8 @@ namespace WoWAddonUpdater
 
         internal string downloadLink;
 
+        internal Dictionary<Sites, Dictionary<int, string>> inputs;
+
         internal string image;
 
         internal string description;
@@ -127,7 +129,7 @@ namespace WoWAddonUpdater
             int current = 1;
             foreach (Sites s in sites)
             {
-                url = Utils.GetDownloadURL(s, Title, Callback_ParsingProgressChanged, Callback_ParsingCompleted);
+                url = Utils.GetDownloadURL(s, this, Callback_ParsingProgressChanged, Callback_ParsingCompleted);
                 if (url != null)
                 {
                     downloadLink = url;
