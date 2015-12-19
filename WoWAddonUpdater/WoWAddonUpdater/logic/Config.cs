@@ -13,12 +13,17 @@ namespace WoWAddonUpdater
     class Config
     {
 
+        internal static event Action<IEnumerable<Addon>> AddonSelectionChanged;
         internal static event Action<Results, string> SettingsLoaded;
         internal static event Action<Results, string> SettingsSaved;
 
         internal static Config Settings;
 
         internal  List<Addon> allAddons = new List<Addon>();
+        internal List<Addon> notOnDiskAddons = new List<Addon>();
+        internal List<States> selectors = new List<States>() { States.All };
+        internal IEnumerable<Addon> previousSelection;
+
         internal  List<string> invalidAddonTitles = new List<string>();
         internal  List<string> parsedTitles = new List<string>();
 
@@ -42,7 +47,7 @@ namespace WoWAddonUpdater
         static Config()
         {
             Directory.CreateDirectory(Defaults.UPDATER_SETTINGS_ABSOLUTE_PATH);
-
+            LoadSettings();
         }
 
         private static void LoadSettings()
@@ -73,6 +78,10 @@ namespace WoWAddonUpdater
         private static void SaveSettings()
         {
             Results res = Serialize<Config>(Settings, Defaults.UPDATER_SETTINGS_FILE_ABSOLUTE_PATH);
+            if (SettingsSaved != null)
+            {
+                SettingsSaved(res, "");
+            }
 
         }
 
@@ -125,6 +134,24 @@ namespace WoWAddonUpdater
             }
         }
 
+
+
+        internal static IEnumerable<Addon> SelectedAddons(List<States> selectors)
+        {
+            Config.Settings.selectors = selectors;
+            IEnumerable<Addon> selection = SelectedAddons();
+            if (Config.Settings.previousSelection != null && !selection.SequenceEqual(Config.Settings.previousSelection) && AddonSelectionChanged != null)
+            {
+                AddonSelectionChanged(selection);
+            }
+            return selection;
+        }
+
+
+        internal static IEnumerable<Addon> SelectedAddons()
+        {
+            return Utils.Addons(Config.Settings.selectors);
+        }
 
     }
 }

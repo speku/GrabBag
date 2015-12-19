@@ -49,33 +49,33 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Addon.cs" />
-    <Compile Include="AddonMeta.cs" />
-    <Compile Include="AddonView.cs">
+    <Compile Include="logic\Addon.cs" />
+    <Compile Include="logic\AddonMeta.cs" />
+    <Compile Include="gui\AddonView.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="AddonView.Designer.cs">
+    <Compile Include="gui\AddonView.Designer.cs">
       <DependentUpon>AddonView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Config.cs" />
-    <Compile Include="Defaults.cs" />
-    <Compile Include="Enums.cs" />
-    <Compile Include="MainMenu.cs">
+    <Compile Include="logic\Config.cs" />
+    <Compile Include="logic\Defaults.cs" />
+    <Compile Include="logic\Enums.cs" />
+    <Compile Include="gui\MainMenu.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include=".Designer.cs">
+    <Compile Include="gui\.Designer.cs">
       <DependentUpon>MainMenu.cs</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Program.cs" />
+    <Compile Include="logic\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SimilarityTester.cs" />
-    <Compile Include="Structures.cs" />
-    <Compile Include="Utils.cs" />
-    <EmbeddedResource Include="AddonView.resx">
+    <Compile Include="logic\SimilarityTester.cs" />
+    <Compile Include="logic\Structures.cs" />
+    <Compile Include="logic\Utils.cs" />
+    <EmbeddedResource Include="gui\AddonView.resx">
       <DependentUpon>AddonView.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MainMenu.resx">
+    <EmbeddedResource Include="gui\MainMenu.resx">
       <DependentUpon>MainMenu.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">

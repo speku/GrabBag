@@ -14,6 +14,7 @@ namespace WoWAddonUpdater
         Pending, InsufficientSimilarity, ParsingMismatch, SettingsNotFound, SettingsLoaded, SettingsNotSavable, SettingsSaved,
     SerializationError, SerializationSuccess}
 
-    enum States { Downloading, Extracting, Cancelled, DownloadError, ExtractionError, Queued, Downloaded, Extracted, All, Selected, Enabled, ToBeDeleted, Parsing, ParsingError}
+    enum States { Downloading, Extracting, Cancelled, DownloadError, ExtractionError, Queued, Downloaded, Extracted, All,
+         Enabled, ToBeDeleted, Parsing, ParsingError}
    
 }

@@ -166,6 +166,12 @@ namespace WoWAddonUpdater
         }
 
 
+        internal static IEnumerable<Addon> Addons(List<States> states)
+        {
+            return Config.Settings.allAddons.Where(a => states.Contains(a.state));
+        }
+
+
         internal static IEnumerable<Addon> Addons(Func<Addon, bool> predicate)
         {
             return Config.Settings.allAddons.Where(predicate);
@@ -524,6 +530,9 @@ namespace WoWAddonUpdater
             }
             return null;
         }
+
+
+     
 
         
 

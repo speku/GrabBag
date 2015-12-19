@@ -93,6 +93,27 @@ namespace WoWAddonUpdater
         }
 
 
+        public override bool Equals(object obj)
+        {
+            if (obj == null){
+                return false;
+            }
+
+            Addon a = obj as Addon;
+            if (a == null)
+            {
+                return false;
+            }
+
+            if (Title == a.Title)
+            {
+                return true;
+            } else
+            {
+                return false;
+            }
+        }
+
         internal void TryDownloadAsync()
         {
             Task.Factory.StartNew(TryDownload);

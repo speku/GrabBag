@@ -19,7 +19,7 @@ namespace WoWAddonUpdater
             {"Title", new Regex("Title" + patternPostfix) },
             {"Author", new Regex("Author" + patternPostfix) },
             {"Interface", new Regex("Interface" + patternPostfix) },
-            {"Notes", new Regex("Notes" + patternPostfix) },
+            {"Notes", new Regex("Notes" + ": ([.\n]+?#") },
             {"Version", new Regex("Version" + patternPostfix) },
             {"XEmail", new Regex("X-Email" + patternPostfix) },
             {"OptionalDeps", new Regex("OptionalDeps" + patternPostfix) },
