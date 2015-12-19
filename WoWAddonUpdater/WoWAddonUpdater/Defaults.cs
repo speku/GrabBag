@@ -11,40 +11,54 @@ namespace WoWAddonUpdater
     {
         static Defaults()
         {
-            Utils.CreateDirectory(DOWNLOAD_ABSOLUTE_PATH_DEFAULT);
+            Directory.CreateDirectory(UPDATER_DOWNLOAD_ABSOLUTE_PATH);
         }
 
-        static public readonly string ADDON_RELATIVE_PATH_DEFAULT = "World of Warcraft/Interface/Addons";
+        internal static readonly string SETTINGS_FILE_NAME = "wowaddonupdater.bin";
 
-        static public readonly string DOWNLOAD_RELATIVE_PATH_DEFAULT = "/WoWAddonUpdater/Downloads";
+        internal static readonly string APP_DATA = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
 
-        static public readonly string ADDON_RELATIVE_PATH_FROM_BASE_DIRECTORY = "/Interface/Addons";
+        internal static readonly string UPDATER_RELATIVE_ROOT_DIRECTORY = "/WoWAddonUpdater";
 
-        static public readonly string DOWNLOAD_ABSOLUTE_PATH_DEFAULT = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + DOWNLOAD_RELATIVE_PATH_DEFAULT;
+        internal static readonly string UPDATER_ABSOLUTE_ROOT_DIRECTORY = APP_DATA + UPDATER_RELATIVE_ROOT_DIRECTORY;
 
-        static public readonly string ADDON_ABSOLUTE_PATH_DEFAULT = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86) + ADDON_RELATIVE_PATH_DEFAULT;
+        internal static readonly string ADDON_RELATIVE_PATH_DEFAULT = "World of Warcraft/Interface/Addons";
 
-        static public readonly string TOC_PATTERN_DEFAULT = "Title: (.+?)(\\n|#)";
+        internal static readonly string UPDATER_DOWNLOAD_RELATIVE_PATH = "/Downloads";
 
-        static public readonly Sites SITE_DEFAULT = Sites.WoWAce;
+        internal static readonly string UPDATER_SETTINGS_RELATIVE_PATH = "/Settings";
 
-        static public readonly Types TYPE_DEFAULT = Types.Alpha;
+        internal static readonly string UPDATER_SETTINGS_ABSOLUTE_PATH = UPDATER_ABSOLUTE_ROOT_DIRECTORY + UPDATER_SETTINGS_RELATIVE_PATH;
 
-        static public readonly double SIMILARITY_DEFAULT = 0.5;
+        internal static readonly string UPDATER_SETTINGS_FILE_ABSOLUTE_PATH = UPDATER_SETTINGS_ABSOLUTE_PATH + "/" + SETTINGS_FILE_NAME;
 
-        static public readonly string BLIZZARD_ADDON_PREFIX = "Blizzard_";
+        internal static readonly string ADDON_RELATIVE_PATH_FROM_BASE_DIRECTORY = "/Interface/Addons";
 
-        static public readonly string[] ACCEPTED_EXTENSIONS = { ".rar", ".zip" };
+        internal static readonly string UPDATER_DOWNLOAD_ABSOLUTE_PATH = UPDATER_ABSOLUTE_ROOT_DIRECTORY + UPDATER_DOWNLOAD_RELATIVE_PATH;
 
-        public const string NAME_DEFAULT = "";
-        public const string DOWNLOAD_DEFAULT = null;
-        public const string IMAGE_DEFAULT = null;
-        public const string DESCRIPTION_DEFAULT = null;
-        public static readonly DateTime LAST_CHECKED_DEFAULT = DateTime.MinValue;
-        public static readonly DateTime LAST_UPDATED_DEFAULT = DateTime.MinValue;
-        public const string INTERFACE_DEFAULT = "1.0.0";
+        internal static readonly string ADDON_ABSOLUTE_PATH_DEFAULT = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86) + ADDON_RELATIVE_PATH_DEFAULT;
 
-        static public readonly Dictionary<string, string> TOC_PATTERNS_DEFAULT = new Dictionary<string, string>
+        internal static readonly string TOC_PATTERN_DEFAULT = "Title: (.+?)(\\n|#)";
+
+        internal static readonly Sites SITE_DEFAULT = Sites.WoWAce;
+
+        internal static readonly Types TYPE_DEFAULT = Types.Alpha;
+
+        internal static readonly double SIMILARITY_DEFAULT = 0.5;
+
+        internal static readonly string BLIZZARD_ADDON_PREFIX = "Blizzard_";
+
+        internal static readonly string[] ACCEPTED_EXTENSIONS = { ".rar", ".zip" };
+
+        internal const string NAME_DEFAULT = "";
+        internal const string DOWNLOAD_DEFAULT = null;
+        internal const string IMAGE_DEFAULT = null;
+        internal const string DESCRIPTION_DEFAULT = null;
+        internal static readonly DateTime LAST_CHECKED_DEFAULT = DateTime.MinValue;
+        internal static readonly DateTime LAST_UPDATED_DEFAULT = DateTime.MinValue;
+        internal const string INTERFACE_DEFAULT = "1.0.0";
+
+        internal static readonly Dictionary<string, string> TOC_PATTERNS_DEFAULT = new Dictionary<string, string>
         {
             {"title",  "Title: (.+?)(\\n|#)"},
             {"author",  "Author: (.+?)(\\n|#)"},
@@ -54,7 +68,7 @@ namespace WoWAddonUpdater
 
         };
 
-        static public readonly Dictionary<Sites, Dictionary<int, ParseDetail>> SITE_TO_PATTERN_DEFAULT = new Dictionary<Sites, Dictionary<int, ParseDetail>>
+        internal static readonly Dictionary<Sites, Dictionary<int, ParseDetail>> SITE_TO_PATTERN_DEFAULT = new Dictionary<Sites, Dictionary<int, ParseDetail>>
         {
             {Sites.Curse, new Dictionary<int, ParseDetail>
             {
@@ -78,7 +92,7 @@ namespace WoWAddonUpdater
             }}
         };
 
-        public static Dictionary<Sites, Func<string, string>> SITE_TO_SEARCH_STRING_REPLACEMENT_FUNCTION = new Dictionary<Sites, Func<string, string>>
+        internal static Dictionary<Sites, Func<string, string>> SITE_TO_SEARCH_STRING_REPLACEMENT_FUNCTION = new Dictionary<Sites, Func<string, string>>
         {
             {Sites.WoWAce, (str) =>  str.Replace(" ", "+") }
         };

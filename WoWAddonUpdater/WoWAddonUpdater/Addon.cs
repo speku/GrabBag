@@ -8,65 +8,66 @@ using System.IO;
 
 namespace WoWAddonUpdater
 {
+    [Serializable]
     class Addon
     {
 
-        public event Action<Addon, Exception, bool> DownloadCompleted;
-        public event Action<Addon, Exception, bool, Results> ParsingCompleted;
-        public event Action<Addon, float> DownloadProgressChanged;
-        public event Action<Addon, float, Exception> ParsingProgressChanged;
-        public event Action<Addon, float> TotalProgressChanged;
-        public event Action<Addon, bool> UnzippingSuccessful;
-        public event Action<Addon> Deleted;
+        internal event Action<Addon, Exception, bool> DownloadCompleted;
+        internal event Action<Addon, Exception, bool, Results> ParsingCompleted;
+        internal event Action<Addon, float> DownloadProgressChanged;
+        internal event Action<Addon, float, Exception> ParsingProgressChanged;
+        internal event Action<Addon, float> TotalProgressChanged;
+        internal event Action<Addon, bool> UnzippingSuccessful;
+        internal event Action<Addon> Deleted;
 
-        public string Title;
-        public string Author;
-        public string Interface;
-        public string Notes;
-        public string Version;
-        public string XEmail;
-        public string OptionalDeps;
-        public string LoadOnDemand;
-        public string SavedVariables;
-        public string XCurseRepositoryID;
-        public string XCurseProjectName;
-        public string XCurseProjectID;
-        public string XCursePackagedVersion;
-        public string XWebsite;
-        public string XCategory;
+        internal string Title;
+        internal string Author;
+        internal string Interface;
+        internal string Notes;
+        internal string Version;
+        internal string XEmail;
+        internal string OptionalDeps;
+        internal string LoadOnDemand;
+        internal string SavedVariables;
+        internal string XCurseRepositoryID;
+        internal string XCurseProjectName;
+        internal string XCurseProjectID;
+        internal string XCursePackagedVersion;
+        internal string XWebsite;
+        internal string XCategory;
 
 
-        public string parsedTitle;
+        internal string parsedTitle;
 
-        public Types type;
+        internal Types type;
 
-        public List<Sites> sites;
+        internal List<Sites> sites;
 
-        public string downloadLink;
+        internal string downloadLink;
 
-        public string image;
+        internal string image;
 
-        public string description;
+        internal string description;
 
-        public DateTime lastChecked;
+        internal DateTime lastChecked;
 
-        public DateTime lastUpdated;
+        internal DateTime lastUpdated;
 
-        public Action cancelDownload;
+        internal Action cancelDownload;
 
-        public States state;
+        internal States state;
 
-        public bool selected;
+        internal bool selected;
 
-        public bool enabled;
+        internal bool enabled;
 
-        public double size;
+        internal double size;
 
-        public string sizeUnit = "MB";
+        internal string sizeUnit = "MB";
 
-        public string downloadedBy;
+        internal string downloadedBy;
 
-        public List<string> absolutePaths = new List<string>();
+        internal List<string> absolutePaths = new List<string>();
 
 
        
@@ -92,13 +93,13 @@ namespace WoWAddonUpdater
         }
 
 
-        public void TryDownloadAsync()
+        internal void TryDownloadAsync()
         {
             Task.Factory.StartNew(TryDownload);
         }
 
 
-        public void TryDownload()
+        internal void TryDownload()
         {
             string url = null;
             int total = sites.Count;
@@ -117,11 +118,11 @@ namespace WoWAddonUpdater
         }
 
 
-        public Results Download(string path = null)
+        internal Results Download(string path = null)
         {
             if (path == null || path == "")
             {
-                path = Defaults.DOWNLOAD_ABSOLUTE_PATH_DEFAULT;
+                path = Defaults.UPDATER_DOWNLOAD_ABSOLUTE_PATH;
             }
             return Utils.Download(downloadLink, path, out cancelDownload, Callback_DownloadProgressChanged, Callback_DownloadCompleted);
 
@@ -144,7 +145,7 @@ namespace WoWAddonUpdater
             if (error == null && !cancelled)
             {
                 state = States.Downloaded;
-                Utils.Unzip(to, Utils.addonAbsolutePath, Callback_UnzippingSuccessful);
+                Utils.Unzip(to, Config.Settings.addonAbsolutePath, Callback_UnzippingSuccessful);
             }
             if (cancelled)
             {
@@ -197,7 +198,7 @@ namespace WoWAddonUpdater
         }
 
 
-        public bool CancelDownload()
+        internal bool CancelDownload()
         {
             if(cancelDownload != null)
             {
@@ -208,7 +209,7 @@ namespace WoWAddonUpdater
         }
 
 
-        public void Delete(List<Addon> addons = null)
+        internal void Delete(List<Addon> addons = null)
         {
             foreach (string path in absolutePaths)
             {

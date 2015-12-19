@@ -57,6 +57,7 @@
     <Compile Include="AddonView.Designer.cs">
       <DependentUpon>AddonView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Config.cs" />
     <Compile Include="Defaults.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="MainMenu.cs">
