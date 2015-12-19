@@ -10,7 +10,7 @@ namespace WoWAddonUpdater
 {
     class AddonMeta
     {
-        private static string patternPostfix = ": (.+?)(\\n|#)";
+        private static string patternPostfix = @": ([^\n\r]+?)(\r|\n|#)";
 
         public event Action<AddonMeta, string> PatternNotFound;
 
