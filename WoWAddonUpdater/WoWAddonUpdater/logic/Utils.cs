@@ -405,7 +405,7 @@ namespace WoWAddonUpdater
             {
                 if (file.EndsWith(".toc"))
                 {
-                    return new AddonMeta(dir);
+                    return new AddonMeta(File.ReadAllText(file));
                 }
             }
             return null;

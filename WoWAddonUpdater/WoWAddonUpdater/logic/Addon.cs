@@ -20,21 +20,21 @@ namespace WoWAddonUpdater
         internal event Action<Addon, bool> UnzippingSuccessful;
         internal event Action<Addon> Deleted;
 
-        internal string Title;
-        internal string Author;
-        internal string Interface;
-        internal string Notes;
-        internal string Version;
-        internal string XEmail;
-        internal string OptionalDeps;
-        internal string LoadOnDemand;
-        internal string SavedVariables;
-        internal string XCurseRepositoryID;
-        internal string XCurseProjectName;
-        internal string XCurseProjectID;
-        internal string XCursePackagedVersion;
-        internal string XWebsite;
-        internal string XCategory;
+        public string Title;
+        public string Author;
+        public string Interface;
+        public string Notes;
+        public string Version;
+        public string XEmail;
+        public string OptionalDeps;
+        public string LoadOnDemand;
+        public string SavedVariables;
+        public string XCurseRepositoryID;
+        public string XCurseProjectName;
+        public string XCurseProjectID;
+        public string XCursePackagedVersion;
+        public string XWebsite;
+        public string XCategory;
 
 
         internal string parsedTitle;

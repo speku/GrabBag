@@ -19,7 +19,7 @@ namespace WoWAddonUpdater
             {"Title", new Regex("Title" + patternPostfix) },
             {"Author", new Regex("Author" + patternPostfix) },
             {"Interface", new Regex("Interface" + patternPostfix) },
-            {"Notes", new Regex("Notes" + ": ([.\n]+?#") },
+            {"Notes", new Regex("Notes" + ": ([.\n])+?#") },
             {"Version", new Regex("Version" + patternPostfix) },
             {"XEmail", new Regex("X-Email" + patternPostfix) },
             {"OptionalDeps", new Regex("OptionalDeps" + patternPostfix) },
@@ -33,7 +33,7 @@ namespace WoWAddonUpdater
             {"XCategory", new Regex("X-Category" + patternPostfix) },
         };
 
-        private static Dictionary<string, string> matches = new Dictionary<string, string>();
+        private  Dictionary<string, string> matches = new Dictionary<string, string>();
 
 
         public AddonMeta(string toc)
