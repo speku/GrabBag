@@ -324,7 +324,8 @@ namespace WoWAddonUpdater
             if (inputs == null)
             {
                 inputs = new Dictionary<int, string>();
-            } else
+            }
+            else
             {
                 start = stageToParseDetail.ToList().Where((kv) => kv.Value.entryPoint).ToList()[0].Key;
             }
@@ -342,7 +343,8 @@ namespace WoWAddonUpdater
                     if (Config.Settings.parsedTitles.Contains(newInput))
                     {
                         return null;
-                    } else
+                    }
+                    else
                     {
                         Config.Settings.parsedTitles.Add(newInput);
                     }
@@ -364,17 +366,20 @@ namespace WoWAddonUpdater
                             }
                             addon.inputs[site] = inputs;
                             return newInput;
-                        } else
+                        }
+                        else
                         {
                             Config.Settings.invalidAddonTitles.Add(addon.Title);
                             return null;
                         }
-                    } else
+                    }
+                    else
                     {
                         inputs[i] = newInput;
                         callbackProgress(i, stageToParseDetail.Count, null);
                     }
-                } catch (Exception e)
+                }
+                catch (Exception e)
                 {
                     Config.Settings.invalidAddonTitles.Add(addon.Title);
                     callbackProgress(i, stageToParseDetail.Count, e);
@@ -383,6 +388,78 @@ namespace WoWAddonUpdater
             }
             return null;
         }
+
+        //internal static string GetDownloadURL(Sites site, Addon addon, Action<int, int, Exception> callbackProgress, Action<bool, Exception, Results> callbackCompleted)
+        //{
+        //    Dictionary<int, ParseDetail> stageToParseDetail = Config.Settings.siteToPattern.ContainsKey(site) ? Config.Settings.siteToPattern[site] : Defaults.SITE_TO_PATTERN_DEFAULT[site];
+        //    Dictionary<int, string> inputs = null;
+        //    int start = 1;
+        //    if (addon.inputs != null)
+        //    {
+        //        addon.inputs.TryGetValue(site, out inputs);
+        //    }
+        //    if (inputs == null)
+        //    {
+        //        inputs = new Dictionary<int, string>();
+        //    } else
+        //    {
+        //        start = stageToParseDetail.ToList().Where((kv) => kv.Value.entryPoint).ToList()[0].Key;
+        //    }
+
+        //    for (int i = start; i <= stageToParseDetail.Count; i++)
+        //    {
+        //        var detail = stageToParseDetail[i];
+        //        if (detail.inputs.Count > 0)
+        //        {
+        //            InjectInputIntoBasePage(site, ref detail, inputs, addon.Title);
+        //        }
+        //        try
+        //        {
+        //            string newInput = Regex.Match(URLToString(detail.basePage), detail.pattern).Groups[1].Value;
+        //            if (Config.Settings.parsedTitles.Contains(newInput))
+        //            {
+        //                return null;
+        //            } else
+        //            {
+        //                Config.Settings.parsedTitles.Add(newInput);
+        //            }
+
+        //            if (i == 1 && SimilarityTester.CompareStrings(addon.Title, newInput) < Config.Settings.similarity)
+        //            {
+        //                Config.Settings.invalidAddonTitles.Add(addon.Title);
+        //                callbackCompleted(false, null, Results.InsufficientSimilarity);
+        //                return null;
+        //            }
+        //            if (i == stageToParseDetail.Count)
+        //            {
+        //                callbackCompleted(true, null, Results.Success);
+        //                if (HasProperExtension(newInput))
+        //                {
+        //                    if (addon.inputs == null)
+        //                    {
+        //                        addon.inputs = new Dictionary<Sites, Dictionary<int, string>>();
+        //                    }
+        //                    addon.inputs[site] = inputs;
+        //                    return newInput;
+        //                } else
+        //                {
+        //                    Config.Settings.invalidAddonTitles.Add(addon.Title);
+        //                    return null;
+        //                }
+        //            } else
+        //            {
+        //                inputs[i] = newInput;
+        //                callbackProgress(i, stageToParseDetail.Count, null);
+        //            }
+        //        } catch (Exception e)
+        //        {
+        //            Config.Settings.invalidAddonTitles.Add(addon.Title);
+        //            callbackProgress(i, stageToParseDetail.Count, e);
+        //            return null;
+        //        }
+        //    }
+        //    return null;
+        //}
 
 
         private static bool HasProperExtension(string downloadLink)
@@ -462,11 +539,12 @@ namespace WoWAddonUpdater
                     AddonMeta data = ParseMetaData(dir);
                     if (data != null)
                     {
+                        if (data.GetMeta("Title") == "")
+                        {
+                            string temp = SplitAndGet(dir);
+                            data.SetMeta("Title", SplitAndGet(dir));
+                        }
                         addons.Add(data);
-                    }
-                    else
-                    {
-                        addons.Add(new AddonMeta((dir.Split('\\').Last())));
                     }
                 }
             }
@@ -525,7 +603,7 @@ namespace WoWAddonUpdater
         
         internal static string SplitAndGet(string str, int index = -1, string delim = null)
         {
-            List<string> delimiters = delim == null ? new List<string> { "/", "\\" } : new List<string> { delim };
+            List<string> delimiters = delim == null ? new List<string> {"\\" } : new List<string> { delim };
 
             foreach (string delimiter in delimiters)
             {

@@ -80,6 +80,12 @@ namespace WoWAddonUpdater
         }
 
 
+        public void SetMeta(string key, string value)
+        {
+            matches[key] = value;
+        }
+
+
         public Addon CreateAddon()
         {
             Addon addon = new Addon();
