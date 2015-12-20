@@ -46,9 +46,15 @@ namespace WoWAddonUpdater
 
         internal static readonly double SIMILARITY_DEFAULT = 0.5;
 
+        internal static readonly double SIMILARITY_SHORT = 0.3;
+
+        internal static readonly int SHORT_THRESHOLD = 6;
+
         internal static readonly string BLIZZARD_ADDON_PREFIX = "Blizzard_";
 
         internal static readonly string[] ACCEPTED_EXTENSIONS = { ".rar", ".zip" };
+
+        internal static readonly int SEARCH_ITERATIONS = 15;
 
         internal const string NAME_DEFAULT = "";
         internal const string DOWNLOAD_DEFAULT = null;
@@ -68,6 +74,7 @@ namespace WoWAddonUpdater
 
         };
 
+
         internal static readonly Dictionary<Sites, Dictionary<int, ParseDetail>> SITE_TO_PATTERN_DEFAULT = new Dictionary<Sites, Dictionary<int, ParseDetail>>
         {
             {Sites.Curse, new Dictionary<int, ParseDetail>
@@ -76,14 +83,14 @@ namespace WoWAddonUpdater
             } },
              {Sites.CurseForge, new Dictionary<int, ParseDetail>
             {
-                {1, new ParseDetail(new List<int> { 0 },"http://wow.curseforge.com/search/?search={0}&site=all","<tr class=\"odd row-joined-to-next\">(.|\n)+?<a href=\"(.+?)\"><mark>", true, 10) },
-                {2, new ParseDetail(new List<int> { 1 },"http://wow.curseforge.com/addons/{0}/","<dt>Recent files</dt>(.|\n)+?<a href=\"/addons/.+?/files/(.+?)/\">", false, 1, true) },
-                {3, new ParseDetail(new List<int> { 1, 2 },"http://wow.curseforge.com/addons/{0}/files/{1}/","<dt>Filename</dt>(.|\n)+?<a href=\"(.+?)\">") }
+                {1, new ParseDetail(new List<int> { 0 },"http://wow.curseforge.com/search/?search={0}&site=all","<tr class=\"odd row-joined-to-next\">(?:.|\n)+?<a href=\"(.+?)\"><mark>", searchStage: true) },
+                {2, new ParseDetail(new List<int> { 1 },"http://wow.curseforge.com/addons/{0}/","<dt>Recent files</dt>(?:.|\n)+?<a href=\"/addons/.+?/files/(.+?)/\">", entryPoint: true) },
+                {3, new ParseDetail(new List<int> { 1, 2 },"http://wow.curseforge.com/addons/{0}/files/{1}/","<dt>Filename</dt>(?:.|\n)+?<a href=\"(.+?)\">") }
             } },
               {Sites.WoWAce, new Dictionary<int, ParseDetail>
             {
-                {1, new ParseDetail(new List<int> { 0 }, "http://www.wowace.com/search/?search={0}&site=all", "<td class=\"col-search-entry\"><h2><a href=\"/addons/(.+?)/\"><mark>", true, 10 ) },
-                  {2, new ParseDetail(new List<int> { 1 }, "http://www.wowace.com/addons/{0}/", "<dt>Recent files</dt>.*\n+.+?<a href=\"/addons/.+?/files/(.+?)/\">", false, 1, true) },
+                {1, new ParseDetail(new List<int> { 0 }, "http://www.wowace.com/search/?search={0}&site=all", "<td class=\"col-search-entry\"><h2><a href=\"(/addons/(.+?)/|.+?/addons/(.+?)/)\">", searchStage: true ) },
+                  {2, new ParseDetail(new List<int> { 1 }, "http://www.wowace.com/addons/{0}/", "<dt>Recent files</dt>.*\n+.+?<a href=\"/addons/.+?/files/(.+?)/\">", entryPoint: true) },
                   {3,  new ParseDetail(new List<int> { 1, 2 },"http://www.wowace.com/addons/{0}/files/{1}/","<dt>Filename</dt>\n+.+?<dd><a href=\"(.+?)\">") }
             } },
                {Sites.WoWInterface, new Dictionary<int, ParseDetail>
@@ -91,6 +98,30 @@ namespace WoWAddonUpdater
                 {1, new ParseDetail(new List<int> { 0 },"","") }
             }}
         };
+
+        //internal static readonly Dictionary<Sites, Dictionary<int, ParseDetail>> SITE_TO_PATTERN_DEFAULT = new Dictionary<Sites, Dictionary<int, ParseDetail>>
+        //{
+        //    {Sites.Curse, new Dictionary<int, ParseDetail>
+        //    {
+        //        {1, new ParseDetail(new List<int> { 0 },"http://www.curse.com/addons/wow/{0}","") }
+        //    } },
+        //     {Sites.CurseForge, new Dictionary<int, ParseDetail>
+        //    {
+        //        {1, new ParseDetail(new List<int> { 0 },"http://wow.curseforge.com/search/?search={0}&site=all","<tr class=\"odd row-joined-to-next\">(.|\n)+?<a href=\"(.+?)\"><mark>", searchStage: true) },
+        //        {2, new ParseDetail(new List<int> { 1 },"http://wow.curseforge.com/addons/{0}/","<dt>Recent files</dt>(.|\n)+?<a href=\"/addons/.+?/files/(.+?)/\">", entryPoint: true) },
+        //        {3, new ParseDetail(new List<int> { 1, 2 },"http://wow.curseforge.com/addons/{0}/files/{1}/","<dt>Filename</dt>(.|\n)+?<a href=\"(.+?)\">") }
+        //    } },
+        //      {Sites.WoWAce, new Dictionary<int, ParseDetail>
+        //    {
+        //        {1, new ParseDetail(new List<int> { 0 }, "http://www.wowace.com/search/?search={0}&site=all", "<td class=\"col-search-entry\"><h2><a href=\"/addons/(.+?)/\"><mark>", searchStage: true ) },
+        //          {2, new ParseDetail(new List<int> { 1 }, "http://www.wowace.com/addons/{0}/", "<dt>Recent files</dt>.*\n+.+?<a href=\"/addons/.+?/files/(.+?)/\">", entryPoint: true) },
+        //          {3,  new ParseDetail(new List<int> { 1, 2 },"http://www.wowace.com/addons/{0}/files/{1}/","<dt>Filename</dt>\n+.+?<dd><a href=\"(.+?)\">") }
+        //    } },
+        //       {Sites.WoWInterface, new Dictionary<int, ParseDetail>
+        //    {
+        //        {1, new ParseDetail(new List<int> { 0 },"","") }
+        //    }}
+        //};
 
         internal static Dictionary<Sites, Func<string, string>> SITE_TO_SEARCH_STRING_REPLACEMENT_FUNCTION = new Dictionary<Sites, Func<string, string>>
         {

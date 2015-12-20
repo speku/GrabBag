@@ -25,12 +25,14 @@ namespace WoWAddonUpdater
         internal IEnumerable<Addon> previousSelection;
 
         internal  List<string> invalidAddonTitles = new List<string>();
-        internal  List<string> parsedTitles = new List<string>();
+        internal  Dictionary<Sites, string> parsedTitles = new Dictionary<Sites, string>();
 
         internal  Dictionary<Sites, Dictionary<int, ParseDetail>> siteToPattern = new Dictionary<Sites, Dictionary<int, ParseDetail>>();
         internal  Dictionary<Sites, Func<string, string>> siteToSearchStringReplacement = new Dictionary<Sites, Func<string, string>>();
 
         internal  double similarity = Defaults.SIMILARITY_DEFAULT;
+        internal double similarityShort = Defaults.SIMILARITY_SHORT;
+        internal int shortThreshold = Defaults.SHORT_THRESHOLD;
         internal  Sites site = Defaults.SITE_DEFAULT;
         internal  Types type = Types.Alpha;
 

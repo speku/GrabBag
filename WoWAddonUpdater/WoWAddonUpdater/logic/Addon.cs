@@ -35,6 +35,7 @@ namespace WoWAddonUpdater
         public string XCursePackagedVersion;
         public string XWebsite;
         public string XCategory;
+        public string FolderName;
 
 
         internal string parsedTitle;
@@ -129,7 +130,17 @@ namespace WoWAddonUpdater
             int current = 1;
             foreach (Sites s in sites)
             {
-                url = Utils.GetDownloadURL(s, this, Callback_ParsingProgressChanged, Callback_ParsingCompleted);
+                for (int i = 0; i < Defaults.SEARCH_ITERATIONS; i++)
+                {
+                    url = Utils.GetDownloadURL(s, this, Callback_ParsingProgressChanged, Callback_ParsingCompleted, i, ignoreAddonInputs: i < Defaults.SEARCH_ITERATIONS - 1 ? true : false);
+                    if (url != null)
+                    {
+                        downloadLink = url;
+                        Download();
+                        // break;
+                        continue;
+                    }
+                }
                 if (url != null)
                 {
                     downloadLink = url;

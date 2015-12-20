@@ -10,6 +10,7 @@ using System.IO.Compression;
 using System.Text.RegularExpressions;
 using Microsoft.VisualBasic.FileIO;
 using System.Threading;
+using HtmlAgilityPack;
 
 namespace WoWAddonUpdater
 {
@@ -312,12 +313,13 @@ namespace WoWAddonUpdater
 
 
 
-        internal static string GetDownloadURL(Sites site, Addon addon, Action<int, int, Exception> callbackProgress, Action<bool, Exception, Results> callbackCompleted)
+
+        internal static string GetDownloadURL(Sites site, Addon addon, Action<int, int, Exception> callbackProgress, Action<bool, Exception, Results> callbackCompleted, int matchIndex, int start = 1, Dictionary<int, string> inputs = null, bool folderName = false, bool ignoreAddonInputs = false)
         {
+            string name = folderName ? addon.FolderName : addon.Title;
+            bool inputsPassed = inputs != null;
             Dictionary<int, ParseDetail> stageToParseDetail = Config.Settings.siteToPattern.ContainsKey(site) ? Config.Settings.siteToPattern[site] : Defaults.SITE_TO_PATTERN_DEFAULT[site];
-            Dictionary<int, string> inputs = null;
-            int start = 1;
-            if (addon.inputs != null)
+            if (addon.inputs != null && !ignoreAddonInputs)
             {
                 addon.inputs.TryGetValue(site, out inputs);
             }
@@ -325,7 +327,7 @@ namespace WoWAddonUpdater
             {
                 inputs = new Dictionary<int, string>();
             }
-            else
+            else if (! inputsPassed)
             {
                 start = stageToParseDetail.ToList().Where((kv) => kv.Value.entryPoint).ToList()[0].Key;
             }
@@ -335,25 +337,41 @@ namespace WoWAddonUpdater
                 var detail = stageToParseDetail[i];
                 if (detail.inputs.Count > 0)
                 {
-                    InjectInputIntoBasePage(site, ref detail, inputs, addon.Title);
+                    InjectInputIntoBasePage(site, ref detail, inputs, name);
                 }
                 try
                 {
-                    string newInput = Regex.Match(URLToString(detail.basePage), detail.pattern).Groups[1].Value;
-                    if (Config.Settings.parsedTitles.Contains(newInput))
+                    string legacyInput = null;
+                    string newInput = Regex.Matches(URLToString(detail.basePage), detail.pattern).Cast<Match>().ToArray()[detail.searchStage ? matchIndex : 0].Groups[1].Value;
+                    if (newInput.ToLower().Contains("curseforge") && detail.searchStage)
+                    {
+                        legacyInput = newInput;
+                        newInput = Regex.Match(newInput, ".+?/addons/(.+?)/").Groups[1].Value;
+                    } else if (detail.searchStage)
+                    {
+                        newInput = Regex.Match(newInput, "/addons/(.+?)/").Groups[1].Value;
+                    }
+
+                    if (Config.Settings.parsedTitles.ContainsKey(site) && Config.Settings.parsedTitles[site] == newInput)
                     {
                         return null;
                     }
                     else
                     {
-                        Config.Settings.parsedTitles.Add(newInput);
+                        Config.Settings.parsedTitles[site] = newInput;
                     }
 
-                    if (i == 1 && SimilarityTester.CompareStrings(addon.Title, newInput) < Config.Settings.similarity)
+                    if (i == 1 && SimilarityTester.CompareStrings(name.Substring(0, newInput.Length <= name.Length ? newInput.Length - 1 : name.Length - 1), newInput) < Config.Settings.similarity &&
+                        SimilarityTester.CompareStrings(addon.FolderName.Substring(0, newInput.Length <= addon.FolderName.Length ? newInput.Length - 1 : addon.FolderName.Length - 1), newInput) < Config.Settings.similarity)
                     {
-                        Config.Settings.invalidAddonTitles.Add(addon.Title);
+                        Config.Settings.invalidAddonTitles.Add(name);
                         callbackCompleted(false, null, Results.InsufficientSimilarity);
                         return null;
+                    }
+                    if (legacyInput != null && legacyInput.ToLower().Contains("curseforge") && site != Sites.CurseForge)
+                    {
+                        inputs[i] = newInput;
+                        return GetDownloadURL(Sites.CurseForge, addon, callbackProgress, callbackCompleted, matchIndex, ++i, inputs, ignoreAddonInputs: true);
                     }
                     if (i == stageToParseDetail.Count)
                     {
@@ -369,7 +387,7 @@ namespace WoWAddonUpdater
                         }
                         else
                         {
-                            Config.Settings.invalidAddonTitles.Add(addon.Title);
+                            Config.Settings.invalidAddonTitles.Add(name);
                             return null;
                         }
                     }
@@ -381,85 +399,13 @@ namespace WoWAddonUpdater
                 }
                 catch (Exception e)
                 {
-                    Config.Settings.invalidAddonTitles.Add(addon.Title);
+                    Config.Settings.invalidAddonTitles.Add(name);
                     callbackProgress(i, stageToParseDetail.Count, e);
                     return null;
                 }
             }
             return null;
         }
-
-        //internal static string GetDownloadURL(Sites site, Addon addon, Action<int, int, Exception> callbackProgress, Action<bool, Exception, Results> callbackCompleted)
-        //{
-        //    Dictionary<int, ParseDetail> stageToParseDetail = Config.Settings.siteToPattern.ContainsKey(site) ? Config.Settings.siteToPattern[site] : Defaults.SITE_TO_PATTERN_DEFAULT[site];
-        //    Dictionary<int, string> inputs = null;
-        //    int start = 1;
-        //    if (addon.inputs != null)
-        //    {
-        //        addon.inputs.TryGetValue(site, out inputs);
-        //    }
-        //    if (inputs == null)
-        //    {
-        //        inputs = new Dictionary<int, string>();
-        //    } else
-        //    {
-        //        start = stageToParseDetail.ToList().Where((kv) => kv.Value.entryPoint).ToList()[0].Key;
-        //    }
-
-        //    for (int i = start; i <= stageToParseDetail.Count; i++)
-        //    {
-        //        var detail = stageToParseDetail[i];
-        //        if (detail.inputs.Count > 0)
-        //        {
-        //            InjectInputIntoBasePage(site, ref detail, inputs, addon.Title);
-        //        }
-        //        try
-        //        {
-        //            string newInput = Regex.Match(URLToString(detail.basePage), detail.pattern).Groups[1].Value;
-        //            if (Config.Settings.parsedTitles.Contains(newInput))
-        //            {
-        //                return null;
-        //            } else
-        //            {
-        //                Config.Settings.parsedTitles.Add(newInput);
-        //            }
-
-        //            if (i == 1 && SimilarityTester.CompareStrings(addon.Title, newInput) < Config.Settings.similarity)
-        //            {
-        //                Config.Settings.invalidAddonTitles.Add(addon.Title);
-        //                callbackCompleted(false, null, Results.InsufficientSimilarity);
-        //                return null;
-        //            }
-        //            if (i == stageToParseDetail.Count)
-        //            {
-        //                callbackCompleted(true, null, Results.Success);
-        //                if (HasProperExtension(newInput))
-        //                {
-        //                    if (addon.inputs == null)
-        //                    {
-        //                        addon.inputs = new Dictionary<Sites, Dictionary<int, string>>();
-        //                    }
-        //                    addon.inputs[site] = inputs;
-        //                    return newInput;
-        //                } else
-        //                {
-        //                    Config.Settings.invalidAddonTitles.Add(addon.Title);
-        //                    return null;
-        //                }
-        //            } else
-        //            {
-        //                inputs[i] = newInput;
-        //                callbackProgress(i, stageToParseDetail.Count, null);
-        //            }
-        //        } catch (Exception e)
-        //        {
-        //            Config.Settings.invalidAddonTitles.Add(addon.Title);
-        //            callbackProgress(i, stageToParseDetail.Count, e);
-        //            return null;
-        //        }
-        //    }
-        //    return null;
-        //}
 
 
         private static bool HasProperExtension(string downloadLink)
@@ -541,9 +487,13 @@ namespace WoWAddonUpdater
                     {
                         if (data.GetMeta("Title") == "")
                         {
-                            string temp = SplitAndGet(dir);
                             data.SetMeta("Title", SplitAndGet(dir));
                         }
+                        if (data.GetMeta("XCurseProjectName") != "")
+                        {
+                            data.SetMeta("Title", data.GetMeta("XCurseProjectName"));
+                        }
+                        data.SetMeta("FolderName", FormatFolderName(SplitAndGet(dir)));
                         addons.Add(data);
                     }
                 }
@@ -627,9 +577,38 @@ namespace WoWAddonUpdater
         }
 
 
-     
+        internal static string FormatFolderName(string folderName)
+        {
+            folderName = folderName.Replace("_", " ");
+            folderName = ResolveCamelCase(folderName);
+            return folderName;
+        }
 
-        
+
+        internal static string ResolveCamelCase(string camelCase)
+        {
+            List<char> res = new List<char>();
+            char[] chars = camelCase.ToArray();
+            for (int i = 0; i < chars.Length; i++)
+            {
+                res.Add(chars[i]);
+                if (i + 1 < chars.Length)
+                {
+                    if (char.IsUpper(chars[i]) && char.IsLower(chars[i + 1]) || char.IsLower(chars[i]) && char.IsUpper(chars[i + 1]))
+                    {
+                        if (res.Count - 2 >= 0 && res[res.Count - 2] != ' ')
+                        {
+                            res.Add(' ');
+                        }
+
+                    }
+                }
+            }
+
+            return string.Join("", res);
+        }
+
+
 
     }
 }
