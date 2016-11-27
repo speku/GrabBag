@@ -31,7 +31,7 @@ namespace AddonUpdater
             return null;
         }
 
-        public static string download(string url, string location)
+        public static string download(string url, string location, bool initial = true)
         {
             string uri = url;
             try
@@ -53,8 +53,14 @@ namespace AddonUpdater
                 return filePath;
             } catch
             {
-                Console.WriteLine("download failure :" + uri);
-                return null;
+                if (initial)
+                {
+                    return download(url.Replace("www.wowace.com", "wow.curseforge.com"), location, false);
+                } else
+                {
+                    Console.WriteLine("download failure :" + uri);
+                    return null;
+                }
             }
         }
 
